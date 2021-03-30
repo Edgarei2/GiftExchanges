@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <com.taiqiwen.base_framework.ui.titlebar.CommonTitleBar
+        android:id="@+id/titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:bottomShadowHeight="0dp"
+        app:centerText="通用标题栏"
+        app:centerTextColor="#ffffff"
+        app:centerType="textView"
+        app:showBottomLine="false"
+        app:statusBarMode="light" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp_main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <View
+        android:id="@+id/head_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/LinePrimary" />
+
+    <com.isanwenyu.tabview.TabGroup
+        android:id="@+id/tg_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:background="@android:color/white"
+        android:elevation="10dp"
+        app:checkedTab="@+id/tab_chat">
+
+        <com.isanwenyu.tabview.TabView
+            android:id="@id/tab_chat"
+            style="@style/TabView"
+            app:imgContainerPadding="@dimen/tab_img_container_padding"
+            app:imgDimension="@dimen/tab_img_size"
+            app:imgDrawable="@drawable/tab_chat"
+            app:imgMargin="@dimen/tab_img_margin"
+            app:textColor="@color/tab_chat_text_selector"
+            app:textSize="@dimen/tab_view_text_size"
+            app:textShown="false"
+            app:textString="聊天" />
+
+        <com.isanwenyu.tabview.TabView
+            android:id="@+id/tb_app"
+            style="@style/TabView"
+            app:imgContainerPadding="@dimen/custom_img_container_padding"
+            app:imgDimension="@dimen/tab_img_size"
+            app:imgDrawable="@drawable/tab_app"
+            app:imgMargin="@dimen/tab_img_margin"
+            app:tabRippleEnable="false"
+            app:textColor="@color/tab_app_text_selector"
+            app:textSize="@dimen/tab_view_text_size"
+            app:textString="应用" />
+
+        <com.isanwenyu.tabview.TabView
+            android:id="@+id/tb_pic"
+            style="@style/TabView"
+            app:badge_color="@android:color/holo_green_dark"
+            app:badge_count="9"
+            app:badge_none_show="true"
+            app:imgContainerPadding="@dimen/custom_img_container_padding"
+            app:imgDrawable="@drawable/tab_pic"
+            app:imgMargin="@dimen/tab_img_margin"
+            app:rv_centered="false"
+            app:rv_color="@android:color/holo_green_dark"
+            app:rv_framerate="10"
+            app:rv_rippleDuration="100"
+            app:rv_zoom="true"
+            app:rv_zoomDuration="300"
+            app:rv_zoomScale="1.05"
+            app:textColor="@color/tab_pic_text_selector"
+            app:textSize="@dimen/tab_view_text_size"
+            app:textString="图片" />
+
+        <com.isanwenyu.tabview.TabView
+            android:id="@+id/tb_user"
+            style="@style/TabView"
+            app:badge_color="@android:color/holo_orange_dark"
+            app:badge_count="888"
+            app:badge_none_show="true"
+            app:badge_padding_right="@dimen/tab_img_container_padding"
+            app:badge_padding_top="@dimen/tab_img_container_padding"
+            app:imgContainerPadding="@dimen/custom_img_container_padding"
+            app:imgDrawable="@drawable/tab_user"
+            app:imgMargin="@dimen/tab_img_margin"
+            app:rv_centered="true"
+            app:rv_color="@android:color/holo_orange_dark"
+            app:rv_framerate="20"
+            app:rv_rippleDuration="100"
+            app:rv_zoom="true"
+            app:rv_zoomDuration="200"
+            app:rv_zoomScale="1.2"
+            app:textColor="@color/tab_user_text_selector"
+            app:textSize="@dimen/tab_view_text_size"
+            app:textString="我" />
+    </com.isanwenyu.tabview.TabGroup>
+
+</LinearLayout>

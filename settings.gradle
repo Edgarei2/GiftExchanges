@@ -1,0 +1,10 @@
+include ':gift_api'
+include ':gift'
+include ':account_api'
+include ':account'
+include ':testlibrary'
+include ':base_framework'
+include ':profile_api'
+include ':profile'
+include ':app'
+rootProject.name = "GiftExchanges"

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dark">#FF222222</color>
+    <color name="light">#FFEEEEEE</color>
+    <color name="bottom_background">#87CEEB</color>
+    <color name="bottom_border">#4682B4</color>
+    <color name="logoScreenBackground">#F7F7F7</color>
+    <color name="colorCursor">#cccccc</color>
+    <color name="colorLoginButton">#004684</color>
+    <color name="title_text">#26B8EE</color>
+</resources>

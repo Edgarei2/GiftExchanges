@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dark">#FF222222</color>
+    <color name="light">#FFEEEEEE</color>
+    <color name="s6_80">#CC000000</color>
+    <color name="ConstTextInverse">#FFFFFFFF</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="TextReverse">#FF161823</color>
+    <color name="LineReverse2">#1E161823</color>
+    <color name="TextReverse3">#80161823</color>
+    <color name="text_reverse_2">#BF161823</color>
+    <color name="shopping_color_9B2DF5">#9B2DF5</color>
+    <color name="shopping_color_9757FF">#9757FF</color>
+    <color name="color_80161823">#80161823</color>
+
+</resources>

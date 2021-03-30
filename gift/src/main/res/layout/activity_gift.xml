@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/BGReverse">
+
+    <com.taiqiwen.base_framework.ui.titlebar.CommonTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:bottomShadowHeight="0dp"
+        app:centerText="礼物详情"
+        app:centerTextColor="#ffffff"
+        app:centerType="textView"
+        app:showBottomLine="false"
+        app:statusBarMode="dark" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_transferee"
+            android:layout_width="match_parent"
+            android:layout_height="400dp" />
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/commerce_anchor_v3_close_icon"/>
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/gift_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:layout_marginBottom="6dp"
+            style="@style/font_size_40"
+            android:textColor="@color/TextReverse"
+            android:maxLines="2"
+            tools:text="2020春装新款法国小2020春装新款法国2020春装新款法国众v领膏药碎花裙"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/LineReverse2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                style="@style/font_size_34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/TextReverse4"
+                android:layout_marginEnd="12dp"
+                android:text="兑换这件礼物您需要" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_credit"/>
+
+            <TextView
+                android:id="@+id/gift_credit"
+                style="@style/font_size_34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:layout_marginEnd="10dp"
+                tools:text="50" />
+
+            <TextView
+                style="@style/font_size_40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/TextReverse4"
+                android:layout_marginEnd="10dp"
+                android:text="积分" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/LineReverse2" />
+
+        <TextView
+            android:id="@+id/no_content_hint"
+            style="@style/font_size_30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/TextReverse"
+            android:text="这件礼物还没有人发表看法" />
+
+        <LinearLayout
+            android:id="@+id/comment_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/anchor_v3_comment_header"
+                tools:ignore="UseCompoundDrawables"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/avatar"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    app:placeholderImage="@drawable/default_user_icon"/>
+
+                <TextView
+                    android:id="@+id/sender_name"
+                    style="@style/font_size_34"
+                    tools:text="测试用户"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:textColor="@color/TextReverse3" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/comment_content"
+                style="@style/font_size_30"
+                tools:text="好想要这件礼物啊"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/text_reverse_2" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/LineReverse2" />
+
+        <LinearLayout
+            android:id="@+id/hasFriendsArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                style="@style/font_size_34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/TextReverse4"
+                android:layout_marginEnd="12dp"
+                android:text="您有" />
+
+            <TextView
+                android:id="@+id/friend_want"
+                style="@style/font_size_40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:layout_marginEnd="10dp"
+                tools:text="2" />
+
+            <TextView
+                style="@style/font_size_34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/TextReverse4"
+                android:layout_marginEnd="10dp"
+                android:text="位朋友想要此礼物" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/noFriendsArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                style="@style/font_size_34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/TextReverse4"
+                android:layout_marginEnd="12dp"
+                android:text="您还没有朋友想要这件礼物" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/collect_area"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/collect_icon_unchecked"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/commerce_nav_btn_collect" />
+
+            <ImageView
+                android:id="@+id/collect_icon_checked"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/commerce_nav_btn_collect_checked" />
+
+            <TextView
+                android:id="@+id/tv_collect_or_shop_cart"
+                style="@style/font_size_40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="收藏"
+                android:textColor="@color/color_80161823" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/buy_area"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/buy_at_once"
+            android:padding="8dp"
+            android:layout_marginStart="10dp">
+
+            <TextView
+                android:id="@+id/tv_buy_text"
+                style="@style/font_size_40"
+                android:textColor="#FFFFFF"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="立即使用积分兑换" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
