@@ -1,6 +1,10 @@
 package com.taiqiwen.base_framework.ui.selectionsheet
 
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -47,7 +51,23 @@ class SheetSelection private constructor() : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.dialog_sheet_selection, container, false)
+        val view = inflater.inflate(R.layout.dialog_sheet_selection, container, false)
+        view.setBackgroundResource(R.drawable.sheet_style)
+        return view
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        dialog.setOnShowListener { setupBottomSheet(it) }
+        return dialog
+    }
+
+    private fun setupBottomSheet(dialogInterface: DialogInterface) {
+        val bottomSheetDialog = dialogInterface as BottomSheetDialog
+        val bottomSheet = bottomSheetDialog.findViewById<View>(
+            com.google.android.material.R.id.design_bottom_sheet)
+            ?: return
+        bottomSheet.setBackgroundColor(Color.TRANSPARENT)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

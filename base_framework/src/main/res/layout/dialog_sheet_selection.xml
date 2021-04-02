@@ -35,7 +35,7 @@
                 android:layout_weight="1"
                 tools:text="@tools:sample/lorem" />
 
-            <androidx.appcompat.widget.AppCompatImageButton
+<!--            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/buttonSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,8 +43,20 @@
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_search"
                 android:visibility="gone"
-                app:backgroundTint="?attr/colorSurface"
-                tools:visibility="visible" />
+                app:backgroundTint="?attr/colorSecondary"
+                tools:visibility="visible" />-->
+
+            <ImageView
+                android:id="@+id/buttonSearch"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/comm_titlebar_search_normal"
+                android:visibility="gone"
+                app:backgroundTint="?attr/colorSecondary"
+                tools:visibility="visible"/>
+
         </LinearLayout>
 
         <androidx.appcompat.widget.SearchView

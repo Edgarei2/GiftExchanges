@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.beyondsw.lib.GiftServiceUtil
 import com.facebook.drawee.view.SimpleDraweeView
+import com.taiqiwen.base_framework.ui.selectionsheet.SheetHelper
 import com.taiqiwen.base_framework.ui.selectionsheet.SheetSelectionItem
 import com.taiqiwen.base_framework.ui.selectionsheet.SheetSelection
 import com.taiqiwen.profile.ui.AvatarLayout
@@ -100,36 +101,13 @@ class MyProfileFragment : Fragment() {
 
         viewModel.getCollection().observe(viewLifecycleOwner, Observer { collections ->
             view.findViewById<View>(R.id.collected_area).setOnClickListener {
-                if (context == null || collections == null) {
-                    return@setOnClickListener
-                }
-                SheetSelection.Builder(context!!)
-                    .title("Custom Sheet Selection")
-                    .items(
-                        source = collections,
-                        mapper = {
-                            SheetSelectionItem(
-                                key = "key_$it",
-                                value = "Custom $it",
-                                iconUrl = it.imageUrls?.get(0),
-                                extraInfo = Bundle().apply {
-                                    putSerializable("gift_detail", it)
-                                }
-                            )
-                        }
-                    )
-                    .showDraggedIndicator(true)
-                    .searchEnabled(true)
-                    .searchNotFoundText("未找到相关结果")
-                    .theme(R.style.Theme_Custom_SheetSelection)
-                    .onItemClickListener { item, position ->
+                SheetHelper.showSheet(context, "收藏的礼物", collections) { item, position ->
+                    if (collections != null) {
                         GiftServiceUtil.getSerVice().startGiftActivity(context!!, collections[position])
                     }
-                    .show()
+                }
             }
         })
-
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
