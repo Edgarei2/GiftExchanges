@@ -10,8 +10,12 @@ interface IAccountService {
 
     fun getCurUser(): GiftUser?
 
+    fun getCurUserId(): String?
+
     fun isLogged(): Boolean
 
     fun refresh(userId: String?, statusCb: (() -> Unit)?)
+
+    fun setCurUser(giftUser: GiftUser?)
 
 }

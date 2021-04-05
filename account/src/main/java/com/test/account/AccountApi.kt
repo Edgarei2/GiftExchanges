@@ -71,10 +71,10 @@ object AccountApi {
 
                 override fun onNext(t: RefreshResponseDTO) {
                     val list = t.result
-                    if (list.isNullOrEmpty()) {
+                    if (list == null) {
                         accountStatusCb?.invoke(null)
                     } else {
-                        accountStatusCb?.invoke(list[0])
+                        accountStatusCb?.invoke(list)
                     }
                 }
 
@@ -100,4 +100,4 @@ interface IServiceNetWork {
 
 class LogInResponseDTO(@SerializedName("results") var result: List<GiftUser>?)
 
-class RefreshResponseDTO(@SerializedName("cur_user_info") var result: List<GiftUser>?)
+class RefreshResponseDTO(@SerializedName("cur_user_info") var result: GiftUser?)

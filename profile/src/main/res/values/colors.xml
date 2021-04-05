@@ -8,4 +8,5 @@
     <color name="colorCursor">#cccccc</color>
     <color name="colorLoginButton">#004684</color>
     <color name="title_text">#26B8EE</color>
+    <color name="bar_color">#eeccff</color>
 </resources>

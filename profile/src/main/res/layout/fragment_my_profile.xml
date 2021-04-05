@@ -67,6 +67,7 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
+                            android:id="@+id/credit_area"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -110,6 +111,7 @@
                                 android:textSize="12sp"/>
                         </LinearLayout>
                         <LinearLayout
+                            android:id="@+id/friends_area"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -186,7 +188,7 @@
                                 android:layout_marginStart="30dp"
                                 android:layout_marginTop="20dp"
                                 style="@style/font_size_48"
-                                android:textColor="@color/bottom_background"/>
+                                android:textColor="@color/bar_color"/>
 
                         </FrameLayout>
 
@@ -229,7 +231,7 @@
                                 android:layout_marginStart="30dp"
                                 android:layout_marginTop="20dp"
                                 style="@style/font_size_48"
-                                android:textColor="@color/bottom_background"/>
+                                android:textColor="@color/bar_color"/>
 
                         </FrameLayout>
 
@@ -272,7 +274,7 @@
                                 android:layout_marginStart="30dp"
                                 android:layout_marginTop="20dp"
                                 style="@style/font_size_48"
-                                android:textColor="@color/bottom_background"/>
+                                android:textColor="@color/bar_color"/>
                         </FrameLayout>
 
 

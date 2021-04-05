@@ -1,6 +1,7 @@
 package com.test.account
 
 import com.taiqiwen.base_framework.GiftApplication
+import com.taiqiwen.base_framework.LocalStorageHelper
 import com.taiqiwen.base_framework.model.GiftUser
 import com.test.account_api.IAccountService
 
@@ -34,5 +35,13 @@ class AccountServiceImpl: IAccountService {
             }
             statusCb?.invoke()
         }
+    }
+
+    override fun setCurUser(giftUser: GiftUser?) {
+        GiftApplication.getInstance().giftUser = giftUser
+    }
+
+    override fun getCurUserId(): String? {
+        return GiftApplication.getInstance().giftUser?.userId
     }
 }

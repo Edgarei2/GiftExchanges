@@ -104,7 +104,7 @@ class SheetSelection private constructor() : BottomSheetDialogFragment() {
     }
 
     private val onItemSelectedListener: OnItemSelectedListener = { item, position ->
-        dismiss()
+        //dismiss()
         onItemClickListener?.invoke(item, position)
     }
 

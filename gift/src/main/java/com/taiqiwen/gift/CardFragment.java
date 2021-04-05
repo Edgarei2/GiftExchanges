@@ -1,5 +1,6 @@
 package com.taiqiwen.gift;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -10,10 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.beyondsw.lib.model.GiftDetailDTO;
 import com.beyondsw.lib.widget.StackCardsView;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.taiqiwen.base_framework.ToastHelper;
+import com.taiqiwen.base_framework.ui.LoadingDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,16 +28,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function1;
 
-/**
- * Created by wensefu on 17-3-4.
- */
 public class CardFragment extends Fragment implements Handler.Callback, StackCardsView.OnCardSwipedListener
         ,View.OnClickListener,CompoundButton.OnCheckedChangeListener{
 
     private static final String TAG ="StackCardsView-DEMO";
 
+    private View rootView;
     private StackCardsView mCardsView;
+    private FrameLayout mCardViewHolder;
     private CardAdapter mAdapter;
     private HandlerThread mWorkThread;
     private Handler mWorkHandler;
@@ -52,6 +59,9 @@ public class CardFragment extends Fragment implements Handler.Callback, StackCar
 
     private FrontPageCardViewModel viewModel;
 
+    private LoadingDialog mLoadingDialog = null;
+    private View mRefreshButton;
+
     public interface Callback {
         void onViewPagerCbChanged(boolean checked);
     }
@@ -65,6 +75,7 @@ public class CardFragment extends Fragment implements Handler.Callback, StackCar
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.page1,null);
+        rootView = root;
 
         mCb = Utils.findViewById(root, R.id.view_pager_cb);
         mCb.setOnCheckedChangeListener(this);
@@ -75,11 +86,13 @@ public class CardFragment extends Fragment implements Handler.Callback, StackCar
         mRightBtn = Utils.findViewById(root,R.id.right);
         mUpBtn = Utils.findViewById(root,R.id.up);
         mDownBtn = Utils.findViewById(root, R.id.down);
+        mRefreshButton = root.findViewById(R.id.refresh_front_cards);
         mLeftBtn.setOnClickListener(this);
         mRightBtn.setOnClickListener(this);
         mUpBtn.setOnClickListener(this);
         mDownBtn.setOnClickListener(this);
 
+        mCardViewHolder = Utils.findViewById(root, R.id.cards_holder);
         mCardsView = Utils.findViewById(root,R.id.cards);
         mCardsView.addOnCardSwipedListener(this);
         mAdapter = new CardAdapter();
@@ -98,7 +111,7 @@ public class CardFragment extends Fragment implements Handler.Callback, StackCar
         viewModel.getFetchStatus().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override public void onChanged(Integer integer) {
                 if (integer.equals(2)) {
-                    Toast.makeText(getContext(), "获取数据失败，请检查网络是否正常", Toast.LENGTH_SHORT).show();
+                    ToastHelper.showToast("获取数据失败，请检查网络是否正常");
                 } else {
                     mWorkHandler.obtainMessage(MSG_START_LOAD_DATA).sendToTarget();
                 }
@@ -118,6 +131,42 @@ public class CardFragment extends Fragment implements Handler.Callback, StackCar
                 for (int i = 0; i < strings.size(); i++) {
                     ImageUrls.labels[i] = strings.get(i);
                 }
+            }
+        });
+    }
+
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mRefreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                final Activity activity = getActivity();
+                if (mLoadingDialog == null && activity != null) {
+                    mLoadingDialog = new LoadingDialog(activity);
+                }
+                if(mLoadingDialog != null) {
+                    mLoadingDialog.show();
+                }
+                viewModel.refresh2FrontCards(new Function1<List<GiftDetailDTO>, Unit>() {
+                    @Override public Unit invoke(List<GiftDetailDTO> giftDetailDTOS) {
+                        while(mAdapter.getCount() > 0) {
+                            mAdapter.remove(0);
+                        }
+                        if(mLoadingDialog != null) {
+                            mLoadingDialog.dismiss();
+                        }
+                        mStartIndex = 0;
+                        mAdapter.setGiftDetails(giftDetailDTOS);
+                        mMainHandler.obtainMessage(MSG_START_LOAD_DATA).sendToTarget();
+                        return null;
+                    }
+                });
+/*                mStartIndex = 0;
+                ImageUrls.test();
+                ArrayList<GiftDetailDTO> arrayList = new ArrayList<>();
+                GiftDetailDTO giftDetailDTO = new GiftDetailDTO("sf", "fs", 3, null, "sf", "sff");
+                arrayList.add(giftDetailDTO);arrayList.add(giftDetailDTO);arrayList.add(giftDetailDTO);
+                mAdapter.setGiftDetails(arrayList);
+                mMainHandler.obtainMessage(MSG_START_LOAD_DATA).sendToTarget();*/
             }
         });
     }

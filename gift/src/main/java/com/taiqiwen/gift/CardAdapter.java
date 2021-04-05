@@ -31,6 +31,7 @@ public class CardAdapter extends StackCardsView.Adapter {
 
     public void remove(int position){
         mItems.remove(position);
+        giftDetails.remove(position);
         notifyItemRemoved(position);
     }
 

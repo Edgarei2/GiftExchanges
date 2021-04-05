@@ -43,52 +43,61 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            />
+            android:layout_weight="1" />
         <ImageButton
             android:id="@+id/right"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_right"
-            android:background="@drawable/bg_bottom_btn_selector"
-            />
+            android:background="@drawable/bg_bottom_btn_selector" />
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            />
+            android:layout_weight="1" />
         <ImageButton
             android:id="@+id/up"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_up"
-            android:background="@drawable/bg_bottom_btn_selector"
-            />
+            android:background="@drawable/bg_bottom_btn_selector" />
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            />
+            android:layout_weight="1" />
         <ImageButton
             android:id="@+id/down"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_down"
-            android:background="@drawable/bg_bottom_btn_selector"
-            />
+            android:background="@drawable/bg_bottom_btn_selector" />
     </LinearLayout>
 
-    <com.beyondsw.lib.widget.StackCardsView
-        android:id="@+id/cards"
+    <FrameLayout
+        android:id="@+id/cards_holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:itemHeight="450dp"
-        app:itemWidth="340dp"
-        android:paddingBottom="66dp"
         android:clipToPadding="false"
-        />
+        android:paddingBottom="66dp">
 
+        <com.beyondsw.lib.widget.StackCardsView
+            android:id="@+id/cards"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:itemHeight="450dp"
+            app:itemWidth="340dp" />
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/refresh_front_cards"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/refresh"/>
+    
 </FrameLayout>

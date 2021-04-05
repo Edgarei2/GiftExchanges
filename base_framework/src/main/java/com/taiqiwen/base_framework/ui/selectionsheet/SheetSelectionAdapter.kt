@@ -1,5 +1,6 @@
 package com.taiqiwen.base_framework.ui.selectionsheet
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.taiqiwen.base_framework.R
+import com.taiqiwen.base_framework.ui.SheetHelper
+import com.taiqiwen.base_framework.ui.SheetHelper.KEY_CHECKOUT_STATUS
 import kotlinx.android.extensions.LayoutContainer
 
 typealias OnItemSelectedListener = (item: SheetSelectionItem, position: Int) -> Unit
@@ -82,10 +85,23 @@ class SheetSelectionAdapter(
             val textViewItem = containerView.findViewById<TextView>(R.id.textViewItem)
             textViewItem.setCompoundDrawablesWithIntrinsicBounds(item.icon ?: 0, 0, selectedIcon, 0)
             textViewItem.text = item.value*/
+            val textView = containerView.findViewById<TextView>(R.id.gift_name)
             containerView.findViewById<SimpleDraweeView>(R.id.gift_icon).setImageURI(item.iconUrl)
-            containerView.findViewById<TextView>(R.id.gift_name).text = item.value
+            textView.text = item.value
             containerView.setOnClickListener {
                 onItemSelectedListener?.invoke(item, position)
+            }
+            //处理业务具体逻辑
+            val extraInfo = item.extraInfo
+            extraInfo?.getString(KEY_CHECKOUT_STATUS)?.let { checkoutStatus ->
+                containerView.context?.let {
+                    if (checkoutStatus == "0") {
+                        textView.setTextColor(it.resources.getColor(R.color.colorAccent))
+                    } else {
+                        textView.setTextColor(it.resources.getColor(R.color.checked_gift))
+                    }
+                }
+
             }
         }
     }
@@ -99,6 +115,6 @@ class SheetSelectionAdapter(
     }
 
     companion object {
-        private const val KEY_SEARCH_NOT_FOUND = "SheetSelectionAdapter:search_not_found"
+        const val KEY_SEARCH_NOT_FOUND = "SheetSelectionAdapter:search_not_found"
     }
 }

@@ -22,6 +22,8 @@ class GiftViewModel : ViewModel() {
 
     private val collected: MutableLiveData<Int> = MutableLiveData()
 
+    private val bought: MutableLiveData<Int> = MutableLiveData()
+
     init {
         //initTest()
     }
@@ -68,6 +70,10 @@ class GiftViewModel : ViewModel() {
         return collected
     }
 
+    fun isBought(): LiveData<Int> {
+        return bought
+    }
+
     fun refreshGiftInfo(giftDetailDTO: GiftDetailDTO) {
         title.value = giftDetailDTO.title
         credit.value = giftDetailDTO.credit
@@ -95,6 +101,10 @@ class GiftViewModel : ViewModel() {
                 }
             }
         }
+
+        GiftApi.hasBought(giftId) { hasBought ->
+            bought.value = hasBought
+        }
     }
 
     fun collectGift(giftId: String?, cb: ((Int) -> Unit)?) {
@@ -105,6 +115,19 @@ class GiftViewModel : ViewModel() {
                 collected.value = (1 - oldState)
             }
         }
+    }
+
+    fun buy(giftId: String?, userId: String?, buyResultCallBack: ((Int?) -> Unit)?) {
+        val cb = {  result: Int? ->
+            if (result == 2) {
+                bought.value = 1
+            } else {
+                bought.value = 0
+            }
+            buyResultCallBack?.invoke(result)
+            Unit
+        }
+        GiftApi.buy(giftId, userId, cb)
     }
 
 }

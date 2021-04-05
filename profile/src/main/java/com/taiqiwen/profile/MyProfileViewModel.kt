@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.beyondsw.lib.GiftServiceUtil
 import com.beyondsw.lib.model.GiftDetailDTO
+import com.beyondsw.lib.model.GiftSentStatusDetailDTO
+import com.taiqiwen.base_framework.model.GiftUser
 import com.test.account_api.AccountServiceUtil
 
 class MyProfileViewModel : ViewModel()  {
@@ -57,7 +59,41 @@ class MyProfileViewModel : ViewModel()  {
                 collectedGifts.value = collection
             }
         }
+    }
 
+    fun fetchFriendsDetail(userIdList: List<String>, cb: ((List<GiftUser>) -> Unit)?) {
+        val userIds = userIdList.joinToString(",")
+        ProfileApi.fetchCurUserFriendsDetail(userIds) { friendsDetailResponseDTO ->
+            val detailMap = friendsDetailResponseDTO?.friendsDetail
+            val list = mutableListOf<GiftUser>()
+            if (detailMap != null) {
+                for (detail in detailMap.values) {
+                    list.add(detail)
+                }
+            }
+            cb?.invoke(list)
+        }
+    }
+
+    fun fetchSentGiftsInfo(userId: String?, cb: ((List<GiftSentStatusDetailDTO>?) -> Unit)?) {
+        ProfileApi.fetchGiftSentInfo(userId, cb)
+    }
+
+    fun fetchCertainFriendName(userId: String?, cb: ((String) -> Unit)?){
+        ProfileApi.fetchCurUserFriendsDetail(userId) { friendsDetailResponseDTO ->
+            val detailMap = friendsDetailResponseDTO?.friendsDetail
+            val list = mutableListOf<GiftUser>()
+            if (detailMap != null) {
+                for (detail in detailMap.values) {
+                    list.add(detail)
+                }
+            }
+            if (list.isNotEmpty()) {
+                cb?.invoke(list[0].userName)
+            } else {
+                cb?.invoke("对方")
+            }
+        }
     }
 
 }

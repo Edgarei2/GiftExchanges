@@ -289,6 +289,14 @@
                 android:layout_width="wrap_content"
                 android:text="立即使用积分兑换" />
 
+            <TextView
+                android:id="@+id/tv_bought_text"
+                style="@style/font_size_40"
+                android:textColor="#FFFFFF"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="这件礼物已经被兑换了" />
+
         </LinearLayout>
 
     </LinearLayout>

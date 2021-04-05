@@ -3,6 +3,7 @@ package com.taiqiwen.gift
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.beyondsw.lib.model.GiftDetailDTO
 import com.taiqiwen.gift.network.GiftApi
 
 class FrontPageCardViewModel : ViewModel()  {
@@ -39,6 +40,20 @@ class FrontPageCardViewModel : ViewModel()  {
                 labels.value = list.map { it.title }
                 adapter.setGiftDetails(list)
                 fetchStatus.value = 1
+            } else {
+                fetchStatus.value = 2
+            }
+        }
+    }
+
+    fun refresh2FrontCards(cb: ((List<GiftDetailDTO>) -> Unit)? = null) {
+        GiftApi.fetchFrontPageCards { success, list ->
+            if (success) {
+                giftIdList.value = list.map { it.id }
+                images.value = list.map { it.imageUrls?.get(0) }
+                labels.value = list.map { it.title }
+                fetchStatus.value = 1
+                cb?.invoke(list)
             } else {
                 fetchStatus.value = 2
             }

@@ -18,6 +18,7 @@ import com.hitomi.tilibrary.transfer.TransferConfig
 import com.hitomi.tilibrary.transfer.Transferee
 import com.taiqiwen.base_framework.ui.titlebar.CommonTitleBar
 import com.beyondsw.lib.model.GiftDetailDTO
+import com.taiqiwen.base_framework.ToastHelper
 import com.taiqiwen.profile_api.ProfileServiceUtil
 import com.test.account_api.AccountServiceUtil
 import com.vansz.picassoimageloader.PicassoImageLoader
@@ -105,14 +106,34 @@ class GiftActivity : AppCompatActivity() {
             }
         })
 
+        viewModel.isBought().observe(this, Observer { hasBought ->
+            if (hasBought == 0) {
+                findViewById<View>(R.id.tv_buy_text).visibility = View.VISIBLE
+                findViewById<View>(R.id.tv_bought_text).visibility = View.GONE
+            } else {
+                findViewById<View>(R.id.tv_buy_text).visibility = View.GONE
+                findViewById<View>(R.id.tv_bought_text).visibility = View.VISIBLE
+            }
+        })
+
         viewModel.refreshGiftInfo(initData)
 
         findViewById<View>(R.id.collect_area).setOnClickListener {
             viewModel.collectGift(initData.id) { newState ->
                 if (newState == 1) {
-                    Toast.makeText(this, "收藏成功", Toast.LENGTH_SHORT).show()
+                    ToastHelper.showToast("收藏成功")
                 } else {
-                    Toast.makeText(this, "取消收藏成功", Toast.LENGTH_LONG).show()
+                    ToastHelper.showToast("取消收藏成功")
+                }
+            }
+        }
+
+        findViewById<View>(R.id.tv_buy_text).setOnClickListener {
+            viewModel.buy(initData.id, AccountServiceUtil.getSerVice().getCurUserId()) { result ->
+                when(result) {
+                    0 -> ToastHelper.showToast("网络错误")
+                    1 -> ToastHelper.showToast("您的积分不足")
+                    2 -> ToastHelper.showToast("兑换成功")
                 }
             }
         }
@@ -140,6 +161,10 @@ class GiftActivity : AppCompatActivity() {
         recyclerView.adapter = recyclerAdapter
     }
 
+    override fun onDestroy() {
+        transferee.destroy()
+        super.onDestroy()
+    }
 
     companion object {
 

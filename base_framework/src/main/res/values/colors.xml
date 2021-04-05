@@ -14,5 +14,6 @@
     <color name="shopping_color_9B2DF5">#9B2DF5</color>
     <color name="shopping_color_9757FF">#9757FF</color>
     <color name="color_80161823">#80161823</color>
+    <color name="checked_gift"> #00ff00</color>
 
 </resources>

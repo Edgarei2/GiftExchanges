@@ -604,4 +604,12 @@ public class StackCardsView extends FrameLayout {
             Log.d(tag, msg);
         }
     }
+
+    public void setItemWidth(int itemWidth) {
+        mItemWidth = itemWidth;
+    }
+
+    public void setItemHeight(int itemHeight) {
+        mItemHeight = itemHeight;
+    }
 }

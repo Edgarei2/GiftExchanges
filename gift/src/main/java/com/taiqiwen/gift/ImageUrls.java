@@ -28,4 +28,11 @@ public class ImageUrls {
             labels[i] = "礼物 " + (i + 1);
         }
     }
+
+    public static void test() {
+        images = new String[] {"http://static.fdc.com.cn/avatar/sns/1486263782969.png",
+                "http://static.fdc.com.cn/avatar/sns/1485055822651.png",
+                "http://static.fdc.com.cn/avatar/sns/1486194909983.png"};
+        labels = new String[] {"sddf", "dsf", "ddd"};
+    }
 }

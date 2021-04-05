@@ -167,6 +167,44 @@ object GiftApi {
             })
     }
 
+    fun buy(giftId: String?, userId: String?, buyResultCallBack: ((Int?) -> Unit)?) {
+        service.buyGifts(userId, giftId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BuyGiftResponseDTO?> {
+                override fun onComplete() {}
+
+                override fun onSubscribe(d: Disposable) {}
+
+                override fun onNext(t: BuyGiftResponseDTO) {
+                    buyResultCallBack?.invoke(t.result)
+                }
+
+                override fun onError(e: Throwable) {
+                    buyResultCallBack?.invoke(0)
+                }
+            })
+    }
+
+    fun hasBought(giftId: String?, cb: ((Int?) -> Unit)?) {
+        service.hasBought(giftId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<BoughtResponseDTO?> {
+                override fun onComplete() {}
+
+                override fun onSubscribe(d: Disposable) {}
+
+                override fun onNext(t: BoughtResponseDTO) {
+                    cb?.invoke(t.hasBought)
+                }
+
+                override fun onError(e: Throwable) {
+                    cb?.invoke(0)
+                }
+            })
+    }
+
 }
 interface IGiftNetWork {
 
@@ -192,6 +230,15 @@ interface IGiftNetWork {
     @FormUrlEncoded
     @POST("getCollectedGifts")
     fun getCollectedGifts(@Field("user_id") userId: String?): Observable<CollectedGiftsResponseDTO?>
+
+    @FormUrlEncoded
+    @POST("buyGift")
+    fun buyGifts(@Field("user_id") userId: String?, @Field("gift_id") giftId: String?): Observable<BuyGiftResponseDTO?>
+
+    @FormUrlEncoded
+    @POST("hasBought")
+    fun hasBought(@Field("gift_id") giftId: String?): Observable<BoughtResponseDTO?>
+
 }
 
 class FrontPageCardsResponseDTO(@SerializedName("results") var result: List<GiftDetailDTO>?)
@@ -215,3 +262,7 @@ class CollectResponseDTO(
 )
 
 class CollectedGiftsResponseDTO(@SerializedName("results") var result: List<GiftDetailDTO>?)
+
+class BuyGiftResponseDTO(@SerializedName("buy_result") val result: Int?)
+
+class BoughtResponseDTO(@SerializedName("has_bought") val hasBought: Int?)

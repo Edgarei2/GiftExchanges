@@ -2,22 +2,21 @@ package com.taiqiwen.profile
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.beyondsw.lib.GiftServiceUtil
 import com.facebook.drawee.view.SimpleDraweeView
-import com.taiqiwen.base_framework.ui.selectionsheet.SheetHelper
-import com.taiqiwen.base_framework.ui.selectionsheet.SheetSelectionItem
-import com.taiqiwen.base_framework.ui.selectionsheet.SheetSelection
+import com.taiqiwen.base_framework.ToastHelper
+import com.taiqiwen.base_framework.ui.SheetHelper
+import com.taiqiwen.base_framework.ui.SheetHelper.KEY_CHECKOUT_STATUS
+import com.taiqiwen.base_framework.ui.SheetHelper.KEY_RECEIVER
 import com.taiqiwen.profile.ui.AvatarLayout
 import com.test.account_api.AccountServiceUtil
 
@@ -50,12 +49,23 @@ class MyProfileFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(MyProfileViewModel::class.java)
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisibleToUser) {
+            dynamicRefresh()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
+        dynamicRefresh()
+    }
+
+    private fun dynamicRefresh() {
         val curUserId = AccountServiceUtil.getSerVice().getCurUser()?.userId
         AccountServiceUtil.getSerVice().refresh(curUserId) {
             viewModel.refreshUserStatus {
-                Toast.makeText(context, "网络错误", Toast.LENGTH_SHORT).show()
+                ToastHelper.showToast("网络错误")
             }
         }
     }
@@ -68,12 +78,8 @@ class MyProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         ivBackGround = view.findViewById(R.id.iv_bg)
         avatarLayout = view.findViewById(R.id.avatar)
-        //val bitmap: Bitmap = BlurBitmapUtil.blurBitmap(context, BitmapFactory.decodeResource(resources, R.drawable.avatar), 3f)
-        //ivBackGround.setImageBitmap(bitmap)
-        //ivBackGround.setImageURI()
         viewModel.getUserAvatarUrl().observe(viewLifecycleOwner, Observer {
             ivBackGround.setImageURI(it)
-            //avatarLayout.circleImageView.background = BitmapDrawable(resources, ImageUtil.getBitmapFromFresco(it))
             avatarLayout.setImage(it)
         })
 
@@ -100,24 +106,54 @@ class MyProfileFragment : Fragment() {
         })
 
         viewModel.getCollection().observe(viewLifecycleOwner, Observer { collections ->
+            view.findViewById<TextView>(R.id.collected).text = collections?.size.toString()
             view.findViewById<View>(R.id.collected_area).setOnClickListener {
-                SheetHelper.showSheet(context, "收藏的礼物", collections) { item, position ->
-                    if (collections != null) {
+                SheetHelper.showSheet(context, "收藏的礼物", collections, noItemHintText = "您还没有收藏礼物") { item, position ->
+                    if (collections != null && position < collections.size) {
                         GiftServiceUtil.getSerVice().startGiftActivity(context!!, collections[position])
                     }
                 }
             }
         })
+        view.findViewById<View>(R.id.credit_area).setOnClickListener {
+            ToastHelper.showToast("您的积分为${viewModel.getCredit().value?:0}")
+        }
+        view.findViewById<View>(R.id.friends_area).setOnClickListener {
+            val friends = viewModel.getFriends().value ?: return@setOnClickListener
+            viewModel.fetchFriendsDetail(friends) { users ->
+                SheetHelper.showSheet(context, "我的朋友", users, noItemHintText = "您还没有朋友") { item, position -> }
+            }
+        }
+        view.findViewById<View>(R.id.item2).setOnClickListener {
+            val userId = AccountServiceUtil.getSerVice().getCurUserId()
+            viewModel.fetchSentGiftsInfo(userId) { giftSentStatusDetailDTOList ->
+                SheetHelper.showSheet(context, "送出的礼物", giftSentStatusDetailDTOList, noItemHintText = "您还没有送出礼物") { item, position ->
+                    if (position < giftSentStatusDetailDTOList?.size?:0) {
+                        val receiver = giftSentStatusDetailDTOList?.get(position)?.receiver
+                        val checkoutStatus = item.extraInfo?.getString(KEY_CHECKOUT_STATUS)
+                        viewModel.fetchCertainFriendName(receiver) { receiverName ->
+                            if (checkoutStatus == "0") {
+                                ToastHelper.showToast("${receiverName}还未签收您的礼物!")
+                            } else {
+                                ToastHelper.showToast("${receiverName}已经签收您的礼物!")
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        view.findViewById<View>(R.id.item1).setOnClickListener {
+            context?.let { it1 -> GiftsGalleryActivity.start(it1) }
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            val window: Window? = activity?.window
-            window?.setFlags(
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        }
+        val window: Window? = activity?.window
+        window?.setFlags(
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
     }
 
     companion object {

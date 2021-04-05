@@ -8,6 +8,8 @@ import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.taiqiwen.base_framework.LocalStorageHelper
+import com.taiqiwen.base_framework.ToastHelper
 import com.taiqiwen.base_framework.ui.LoadingDialog
 import com.test.account_api.AccountServiceUtil
 import org.json.JSONObject
@@ -30,10 +32,11 @@ class LoginActivity : AppCompatActivity() {
              AccountServiceUtil.getSerVice().checkLogin(userName, password) { result ->
                loadingDialog?.dismiss()
                 if (result) {
-                    Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show()
+                    ToastHelper.showToast("登录成功")
+                    LocalStorageHelper.saveUserInfo(this, AccountServiceUtil.getSerVice().getCurUser())
                     finish()
                 } else {
-                    Toast.makeText(this, "登录失败，请检查您的用户名或者密码填写是否正确", Toast.LENGTH_SHORT).show()
+                    ToastHelper.showToast("登录失败，请检查您的用户名或者密码填写是否正确")
                 }
             }
         }

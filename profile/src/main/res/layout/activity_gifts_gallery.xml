@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.taiqiwen.base_framework.ui.titlebar.CommonTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:bottomShadowHeight="0dp"
+        app:centerText="礼物详情"
+        app:centerTextColor="#ffffff"
+        app:centerType="textView"
+        app:showBottomLine="false"
+        app:statusBarMode="dark" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/close_icon"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_images"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+
+
+</LinearLayout>

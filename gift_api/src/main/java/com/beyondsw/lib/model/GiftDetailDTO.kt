@@ -10,7 +10,8 @@ data class GiftDetailDTO(
     @SerializedName ("title")val title: String? = null,
     @SerializedName ("credit")val credit: Int? = null,
     @SerializedName ("imageUrls")val imageUrls: List<String>? = null,
-    @SerializedName ("detail")val detail: String? = null
+    @SerializedName ("detail")val detail: String? = null,
+    @SerializedName ("owner")val owner: String? = null
 ): ISheetData, Serializable {
     override fun getKey(): String = "key_$id"
 

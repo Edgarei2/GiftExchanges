@@ -1,29 +1,21 @@
 package com.taiqiwen.giftexchanges;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.andexert.library.RippleView;
 import com.beyondsw.lib.GiftServiceUtil;
 import com.isanwenyu.tabview.TabGroup;
 import com.isanwenyu.tabview.TabView;
-import com.taiqiwen.base_framework.ServiceManager;
+import com.taiqiwen.base_framework.LocalStorageHelper;
 import com.taiqiwen.base_framework.ui.titlebar.CommonTitleBar;
-import com.taiqiwen.gift.GiftActivity;
-import com.taiqiwen.gift.model.GiftParams;
 import com.taiqiwen.profile_api.ProfileServiceUtil;
 import com.taiqiwen.testlibrary.TestUtil;
 import com.test.account_api.AccountServiceUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,13 +35,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
         initView();
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("userName", "userName");
-            obj.put("password", "dg");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
+        AccountServiceUtil.getSerVice().setCurUser(LocalStorageHelper.loadUserInfo(this));
     }
 
     private void initView() {
@@ -152,5 +139,10 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "position:" + position);
         //不使用切换动画 避免与自定义动画冲突
         mViewPager.setCurrentItem(position, false);
+    }
+
+    @Override protected void onStop() {
+        LocalStorageHelper.saveUserInfo(this, AccountServiceUtil.getSerVice().getCurUser());
+        super.onStop();
     }
 }
