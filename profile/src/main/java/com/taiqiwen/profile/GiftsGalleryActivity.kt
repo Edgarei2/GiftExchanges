@@ -3,21 +3,35 @@ package com.taiqiwen.profile
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.DashPathEffect
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ConvertUtils
 import com.bumptech.glide.Glide
+import com.facebook.drawee.view.SimpleDraweeView
 import com.hitomi.tilibrary.style.index.NumberIndexIndicator
 import com.hitomi.tilibrary.style.progress.ProgressBarIndicator
 import com.hitomi.tilibrary.transfer.TransferConfig
 import com.hitomi.tilibrary.transfer.Transferee
+import com.taiqiwen.base_framework.DialogHelper
+import com.taiqiwen.base_framework.ToastHelper
+import com.taiqiwen.base_framework.ui.divider.HorizontalDividerItemDecoration
 import com.taiqiwen.base_framework.ui.titlebar.CommonTitleBar
+import com.taiqiwen.profile.GiftsGalleryViewModel.Companion.KEY_GIFT_CHANGED_STATUS
+import com.taiqiwen.profile.GiftsGalleryViewModel.Companion.KEY_GIFT_CREDIT
+import com.taiqiwen.profile.GiftsGalleryViewModel.Companion.KEY_GIFT_DETAIL
+import com.taiqiwen.profile.GiftsGalleryViewModel.Companion.KEY_GIFT_OBJ_ID
+import com.taiqiwen.profile.GiftsGalleryViewModel.Companion.KEY_SENDER_ID
+import com.test.account_api.AccountServiceUtil
 import com.vansz.glideimageloader.GlideImageLoader
 import com.zhy.adapter.recyclerview.CommonAdapter
 import com.zhy.adapter.recyclerview.base.ViewHolder
@@ -37,8 +51,25 @@ class GiftsGalleryActivity : AppCompatActivity() {
         transferee = Transferee.getDefault(this)
         rvImages = findViewById(R.id.rv_images)
         rvImages.layoutManager = LinearLayoutManager(this)
+        val paint = Paint()
+        paint.strokeWidth = 5f
+        paint.color = Color.BLUE
+        paint.isAntiAlias = true
+        paint.pathEffect = DashPathEffect(floatArrayOf(25.0f, 25.0f), 0F)
+        rvImages.addItemDecoration(
+            HorizontalDividerItemDecoration.Builder(this)
+                //.drawable(R.drawable.sample)
+                .paint(paint)
+                //.size(15)
+                .build()
+        )
         viewModel = ViewModelProvider(this).get(GiftsGalleryViewModel::class.java)
-        rvImages.adapter = GiftsCircleAdapter(this, viewModel.getFriendsCircleList())
+        viewModel.refreshGiftsCircleList(AccountServiceUtil.getSerVice().getCurUserId())
+        viewModel.getGiftsCircleListInfo().observe(this, Observer { info ->
+            viewModel.getExtraInfoList().value ?.let {
+                rvImages.adapter = GiftsCircleAdapter(this, it , info)
+            }
+        })
 
         titleBar = findViewById(R.id.title_bar)
         titleBar.setBackgroundResource(R.drawable.shape_gradient)
@@ -49,7 +80,7 @@ class GiftsGalleryActivity : AppCompatActivity() {
         }
     }
 
-    private inner class GiftsCircleAdapter(val context: Context, data: List<Pair<String, List<String>>>?)
+    private inner class GiftsCircleAdapter(val context: Context, val extraInfo: List<Map<String, String?>>, data: List<Pair<String, List<String>>>?)
         : CommonAdapter<Pair<String, List<String>>>(context, R.layout.item_gifts_circle, data) {
 
         private val divider: DividerGridItemDecoration = DividerGridItemDecoration(
@@ -60,6 +91,76 @@ class GiftsGalleryActivity : AppCompatActivity() {
 
         override fun convert(viewHolder: ViewHolder?, item: Pair<String, List<String>>?, position: Int) {
             viewHolder?.setText(R.id.tv_content, item?.first)
+            viewHolder?.getView<TextView>(R.id.tv_detail)?.text = extraInfo[position][KEY_GIFT_DETAIL]
+            val sendUid = extraInfo[position][KEY_SENDER_ID]
+            if (sendUid == null) {
+                viewHolder?.getView<TextView>(R.id.tv_name)?.text = "积分兑换"
+            } else {
+                viewModel.fetchCertainUserDetail(sendUid) { user ->
+                    viewHolder?.getView<SimpleDraweeView>(R.id.iv_header)?.setImageURI(user?.avatarUrl)
+                    viewHolder?.getView<TextView>(R.id.tv_name)?.text = "${user?.userName} 赠送给您"
+                }
+            }
+            val takenOut = viewHolder?.getView<TextView>(R.id.changed_to_real)
+            val changeToCredit = viewHolder?.getView<TextView>(R.id.change_to_credit)
+            val takeOut = viewHolder?.getView<TextView>(R.id.change_to_real)
+            val credit = extraInfo[position][KEY_GIFT_CREDIT]
+            val curUserCredit = AccountServiceUtil.getSerVice().getCurUser()?.curCredit.toString()
+            val curUserObjectId = AccountServiceUtil.getSerVice().getCurUser()?.objectId.toString()
+            val giftObjectId = extraInfo[position][KEY_GIFT_OBJ_ID]
+
+            if (extraInfo[position][KEY_GIFT_CHANGED_STATUS] == "1") {
+                takenOut?.visibility = View.VISIBLE
+            } else {
+                changeToCredit?.visibility = View.VISIBLE
+                takeOut?.visibility = View.VISIBLE
+            }
+
+            changeToCredit?.setOnClickListener {
+                DialogHelper.showDialog(
+                    this@GiftsGalleryActivity,
+                    title = "您确定要将该礼物兑换为积分吗",
+                    detail = "兑换后该礼物的积分会加入您的积分余额中",
+                    positiveCb = {
+                        viewModel.restoreGift2Credit(giftObjectId,
+                            curUserObjectId,
+                            credit,
+                            curUserCredit) { result ->
+                            if (result) {
+                                ToastHelper.showToast("兑换积分成功")
+                                rvImages.postDelayed({
+                                    viewModel.refreshGiftsCircleList(AccountServiceUtil.getSerVice().getCurUserId())
+                                }, 2000)
+                            }
+                            else{
+                                ToastHelper.showToast("网络错误")
+                            }
+                        }
+                    }
+                )
+            }
+
+            takeOut?.setOnClickListener {
+                DialogHelper.showDialog(
+                    this@GiftsGalleryActivity,
+                    title = "您确定要提现该礼物吗",
+                    detail = "提现后该礼物将会被寄送到您提供的地址",
+                    positiveCb = {
+                        viewModel.takeGift(giftObjectId) { result ->
+                            if (result) {
+                                ToastHelper.showToast("提现成功")
+                                takenOut?.visibility = View.VISIBLE
+                                takeOut?.visibility = View.GONE
+                                changeToCredit?.visibility = View.GONE
+                            }
+                            else{
+                                ToastHelper.showToast("网络错误")
+                            }
+                        }
+                    }
+                )
+            }
+
             val rvPhotos = viewHolder?.getView<RecyclerView>(R.id.rv_photos)
             // 重置 divider
             rvPhotos?.removeItemDecoration(divider)

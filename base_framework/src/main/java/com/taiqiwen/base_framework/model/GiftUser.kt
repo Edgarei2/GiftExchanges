@@ -7,6 +7,7 @@ import java.io.Serializable
 
 
 data class GiftUser(
+    @SerializedName ("objectId") var objectId: String? = null,
     @SerializedName("userId") var userId: String = "",
     @SerializedName("userName") var userName: String = "",
     @SerializedName("password") var password: String = "",

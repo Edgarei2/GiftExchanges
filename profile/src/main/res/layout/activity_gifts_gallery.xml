@@ -20,6 +20,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_images"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <ImageView
             android:id="@+id/close"
             android:layout_width="45dp"
@@ -29,13 +34,6 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/close_icon"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_images"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
     </FrameLayout>
-
-
 
 </LinearLayout>

@@ -6,13 +6,15 @@ import com.taiqiwen.base_framework.ui.selectionsheet.ISheetData
 import java.io.Serializable
 
 data class GiftDetailDTO(
+    @SerializedName ("objectId") var objectId: String? = null,
     @SerializedName ("id") var id: String? = null,
     @SerializedName ("title")val title: String? = null,
     @SerializedName ("credit")val credit: Int? = null,
     @SerializedName ("imageUrls")val imageUrls: List<String>? = null,
     @SerializedName ("detail")val detail: String? = null,
-    @SerializedName ("owner")val owner: String? = null
-): ISheetData, Serializable {
+    @SerializedName ("owner")val owner: String? = null,
+    @SerializedName ("taken_out")val takenOut: String? = null
+    ): ISheetData, Serializable {
     override fun getKey(): String = "key_$id"
 
     override fun getValue(): String = title?:""

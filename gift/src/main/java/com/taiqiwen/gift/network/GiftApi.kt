@@ -79,13 +79,13 @@ object GiftApi {
             })
     }
 
-    fun fetchWantedUsers(giftId: String): Observable<List<String>?> {
+    private fun fetchWantedUsers(giftId: String): Observable<List<String>?> {
         return service.getWantedFriends(giftId)
             .subscribeOn(Schedulers.io())
             .map { it.wantedUsers }
     }
 
-    fun fetchCurUserFriends(userId: String): Observable<List<String>?> {
+    private fun fetchCurUserFriends(userId: String): Observable<List<String>?> {
         return service.getCurUserFriends(userId)
             .subscribeOn(Schedulers.io())
             .map { it.friends }

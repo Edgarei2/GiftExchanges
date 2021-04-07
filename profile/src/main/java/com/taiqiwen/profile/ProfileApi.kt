@@ -15,6 +15,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
@@ -80,7 +81,7 @@ object ProfileApi {
             })
     }
 
-    fun fetchSentGiftStatus(senderUid: String?) : Observable<List<GiftSentStatusDTO?>> {
+    private fun fetchSentGiftStatus(senderUid: String?) : Observable<List<GiftSentStatusDTO?>> {
         return service.getSentGiftsStatus(senderUid).map { it.sendStatus }
     }
 
@@ -126,6 +127,91 @@ object ProfileApi {
             })
     }
 
+    private fun fetchReceivedGifts(userId: String?): Observable<Map<String, String>?> {
+        return service.getReceivedGifts(userId)
+            .subscribeOn(Schedulers.io())
+            .map { it.receivedGifts }
+    }
+
+    private fun fetchOwnedGifts(userId: String?): Observable<List<GiftDetailDTO>?> {
+        return service.getOwnedGifts(userId)
+            .subscribeOn(Schedulers.io())
+            .map { it.ownedGifts }
+    }
+
+    fun fetchOwnedGiftsDetail(userId: String?, cb: ((List<Pair<GiftDetailDTO, String?>>) -> Unit)?) {
+        val receivedGifts = fetchReceivedGifts(userId)
+        val ownedGifts = fetchOwnedGifts(userId)
+        Observable.zip(receivedGifts, ownedGifts, object : BiFunction<Map<String, String>?, List<GiftDetailDTO>?, List<Pair<GiftDetailDTO, String?>>> {
+            override fun apply(giftsExchanges: Map<String, String>, giftsOwned: List<GiftDetailDTO>): List<Pair<GiftDetailDTO, String?>> {
+                val result = mutableListOf<Pair<GiftDetailDTO, String?>>()
+                for (gift in giftsOwned) {
+                    if (giftsExchanges.containsKey(gift.id)) {
+                        result.add(Pair(gift, giftsExchanges[gift.id]))
+                    } else {
+                        result.add(Pair(gift, null))
+                    }
+                }
+                return result
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<List<Pair<GiftDetailDTO, String?>>> {
+            override fun onComplete() { }
+
+            override fun onSubscribe(d: Disposable) { }
+
+            override fun onNext(t: List<Pair<GiftDetailDTO, String?>>) {
+                cb?.invoke(t)
+            }
+
+            override fun onError(e: Throwable) {
+                cb?.invoke(emptyList())
+            }
+        } )
+    }
+
+    fun restoreGift2Credit(
+        giftObjId: String?,
+        userObjId: String?,
+        credit: String?,
+        curCredit: String?,
+        cb: (String?) -> Unit
+    ) {
+        service.restoreGift2Credit(giftObjId, userObjId, credit, curCredit)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<RestoreGiftResponseDTO?> {
+                override fun onComplete() { }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onNext(t: RestoreGiftResponseDTO) {
+                    cb.invoke(t.result)
+                }
+
+                override fun onError(e: Throwable) {
+                    cb.invoke(null)
+                }
+            })
+    }
+
+    fun takeGift(giftObjId: String?, cb: (String?) -> Unit){
+        service.takeGift(giftObjId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<TakeGiftResponseDTO?> {
+                override fun onComplete() { }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onNext(t: TakeGiftResponseDTO) {
+                    cb.invoke(t.result)
+                }
+
+                override fun onError(e: Throwable) {
+                    cb.invoke(null)
+                }
+            })
+    }
 }
 
 interface IProfileNetWork {
@@ -146,6 +232,27 @@ interface IProfileNetWork {
     @POST("getCertainGiftDetail")
     fun getCertainGiftDetail(@Field("gift_ids") giftIds: String?): Observable<GiftDetailResponseDTO?>
 
+    @FormUrlEncoded
+    @POST("getReceivedGifts")
+    fun getReceivedGifts(@Field("user_id") userId: String?): Observable<ReceivedGiftsResponseDTO?>
+
+    @FormUrlEncoded
+    @POST("getOwnedGifts")
+    fun getOwnedGifts(@Field("user_id") userId: String?): Observable<OwnedGiftsResponseDTO?>
+
+    @FormUrlEncoded
+    @POST("restoreGift2Credit")
+    fun restoreGift2Credit(
+        @Field("gift_obj_id") giftObjId: String?,
+        @Field("user_obj_id") userObjId: String?,
+        @Field("credit") credit: String?,
+        @Field("cur_credit") curCredit: String?
+    ): Observable<RestoreGiftResponseDTO?>
+
+    @FormUrlEncoded
+    @POST("takeGift")
+    fun takeGift(@Field("gift_obj_id") giftObjId: String?): Observable<TakeGiftResponseDTO?>
+
 }
 
 class FriendsResponseDTO(
@@ -162,4 +269,20 @@ class GiftSentStatusResponseDTO(
 
 class GiftDetailResponseDTO(
     @SerializedName("gift_detail") var giftDetail: List<GiftDetailDTO?>
+)
+
+class ReceivedGiftsResponseDTO(
+    @SerializedName("received_gifts") var receivedGifts: Map<String, String>?
+)
+
+class OwnedGiftsResponseDTO(
+    @SerializedName("owned_gifts") var ownedGifts: List<GiftDetailDTO>?
+)
+
+class RestoreGiftResponseDTO(
+    @SerializedName("restore_result") var result: String?
+)
+
+class TakeGiftResponseDTO(
+    @SerializedName("take_out_result") var result: String?
 )

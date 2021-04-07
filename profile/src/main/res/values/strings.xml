@@ -8,4 +8,8 @@
     <string name="button_buy">Buy</string>
     <string name="button_check_test">ok</string>
     <string name="string_auto_sign">3天后未确认自动签收</string>
+
+    <string name="to_credit"><u>兑换为积分</u></string>
+    <string name="to_real"><u>提现</u></string>
+
 </resources>
