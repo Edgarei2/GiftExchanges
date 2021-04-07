@@ -162,6 +162,11 @@ public class GiftCardView extends View {
         invalidate();
     }
 
+    public void setOnCheckOut(OnCheckOut onCheckOut) {
+        this.mOnCheckOut = onCheckOut;
+        invalidate();
+    }
+
     private void init(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.CardView);
         if (typedArray != null) {
@@ -413,7 +418,7 @@ public class GiftCardView extends View {
         mPaintText.setColor(mPriceTextColor);
         mPaintText.setTextSize(mCircular - 1);
 
-        String price = "$" + new java.text.DecimalFormat("#.00").format(mPrice);
+        String price = "价值积分 " + (int)mPrice;
 
         canvas.drawText(price, rectFBgMove.left + mCircular,
                 rectFBgMove.top + rectFBgMove.height() / 3f * 2f
@@ -1019,7 +1024,7 @@ public class GiftCardView extends View {
                 } else if (rectFCheckButton.contains(event.getX(), event.getY())
                         && mAnimatedBgValue == 1.0f) {
                     if (mOnCheckOut != null) {
-                        mOnCheckOut.ok(getId());
+                        mOnCheckOut.ok();
                     } else {
                         Toast.makeText(getContext(), "OnCheckOut is null", Toast.LENGTH_SHORT)
                                 .show();
@@ -1109,7 +1114,7 @@ public class GiftCardView extends View {
     }
 
     public interface OnCheckOut {
-        void ok(int vid);
+        void ok();
     }
 
 

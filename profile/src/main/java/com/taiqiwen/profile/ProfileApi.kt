@@ -62,6 +62,25 @@ object ProfileApi {
             })
     }
 
+    fun fetchUserDetail(userId: String?, cb: ((GiftUser?) -> Unit)) {
+        service.getFriendsDetail(userId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<FriendsDetailResponseDTO?> {
+                override fun onComplete() { }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onNext(t: FriendsDetailResponseDTO) {
+                    cb.invoke(t.friendsDetail?.get(userId))
+                }
+
+                override fun onError(e: Throwable) {
+                    cb.invoke(null)
+                }
+            })
+    }
+
     fun fetchCurUserFriendsDetail(userIds: String?, cb: ((FriendsDetailResponseDTO?) -> Unit)?) {
         service.getFriendsDetail(userIds)
             .subscribeOn(Schedulers.io())
@@ -83,6 +102,24 @@ object ProfileApi {
 
     private fun fetchSentGiftStatus(senderUid: String?) : Observable<List<GiftSentStatusDTO?>> {
         return service.getSentGiftsStatus(senderUid).map { it.sendStatus }
+    }
+
+    fun fetchGiftDetail(giftIds: String?, cb: ((GiftDetailDTO?) -> Unit)) {
+        service.getCertainGiftDetail(giftIds).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<GiftDetailResponseDTO?> {
+                override fun onComplete() { }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onNext(t: GiftDetailResponseDTO) {
+                    cb.invoke(t.giftDetail[0])
+                }
+
+                override fun onError(e: Throwable) {
+                   cb.invoke(null)
+                }
+            })
     }
 
     fun fetchCertainGiftDetail(giftIds: String?): Observable<List<GiftDetailDTO?>> {
@@ -212,6 +249,44 @@ object ProfileApi {
                 }
             })
     }
+
+    fun fetchUnCheckedGifts(userId: String?, cb: (List<GiftSentStatusDTO>?) -> Unit) {
+        service.fetchUnCheckedGifts(userId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<UnCheckedGiftsResponseDTO?> {
+                override fun onComplete() { }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onNext(t: UnCheckedGiftsResponseDTO) {
+                    cb.invoke(t.uncheckedGifts)
+                }
+
+                override fun onError(e: Throwable) {
+                    cb.invoke(null)
+                }
+            })
+    }
+
+    fun checkoutGift(exchangeObjId: String?, giftObjId: String?, userId: String?, cb: (String?) -> Unit) {
+        service.checkoutGift(exchangeObjId, giftObjId, userId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<CheckoutGiftResponseDTO?> {
+                override fun onComplete() { }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onNext(t: CheckoutGiftResponseDTO) {
+                    cb.invoke(t.checkoutResult)
+                }
+
+                override fun onError(e: Throwable) {
+                    cb.invoke(null)
+                }
+            })
+    }
 }
 
 interface IProfileNetWork {
@@ -253,6 +328,18 @@ interface IProfileNetWork {
     @POST("takeGift")
     fun takeGift(@Field("gift_obj_id") giftObjId: String?): Observable<TakeGiftResponseDTO?>
 
+    @FormUrlEncoded
+    @POST("fetchUnCheckedGifts")
+    fun fetchUnCheckedGifts(@Field("user_id") userId: String?): Observable<UnCheckedGiftsResponseDTO?>
+
+    @FormUrlEncoded
+    @POST("checkoutGift")
+    fun checkoutGift(
+        @Field("exchange_obj_id") objId: String?,
+        @Field("gift_obj_id")giftObjId: String?,
+        @Field("user_id")userId: String?
+    ): Observable<CheckoutGiftResponseDTO?>
+
 }
 
 class FriendsResponseDTO(
@@ -285,4 +372,12 @@ class RestoreGiftResponseDTO(
 
 class TakeGiftResponseDTO(
     @SerializedName("take_out_result") var result: String?
+)
+
+class UnCheckedGiftsResponseDTO(
+    @SerializedName("unchecked_exchanges") var uncheckedGifts: List<GiftSentStatusDTO>?
+)
+
+class CheckoutGiftResponseDTO(
+    @SerializedName("checkout_result") var checkoutResult: String?
 )

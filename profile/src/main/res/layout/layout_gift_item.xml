@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="16dp">
 
     <FrameLayout
         android:layout_width="300dp"
@@ -16,7 +18,6 @@
             android:layout_height="200dp"
             card:buttonByText="查看"
             card:buttonCheckText="签收"
-            card:cardGiftPrice="520"
             card:cardGiftTitle="礼物卡" />
 
         <LinearLayout
@@ -27,53 +28,78 @@
             android:visibility="gone"
             tools:visibility="visible">
 
-            <TextView
-                android:id="@+id/giftTitle"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="5dp"
-                android:textColor="@color/dark"
-                style="@style/font_size_54"
-                tools:text="xxx赠送给您一件礼物" />
-
-
             <LinearLayout
-                android:layout_width="300dp"
+                android:id="@+id/gift_description_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="5dp">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/gift_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:roundedCornerRadius="8dp" />
 
                 <TextView
-                    android:id="@+id/giftName"
+                    android:id="@+id/gift_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@color/dark"
+                    android:maxLines="2"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    style="@style/font_size_34"
+                    tools:text="礼物名称" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    style="@style/font_size_34"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/dark"
-                    style="@style/font_size_48"
-                    tools:text="礼物x" />
-                <Button
-                    android:id="@+id/giftDetail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="10dp"
-                    android:text="礼物详情"
-                    android:background="@drawable/button_style" />
+                    android:textColor="@color/TextReverse4"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="来自" />
+
+                <TextView
+                    android:id="@+id/gift_sender"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:layout_weight="1"
+                    style="@style/font_size_34"
+                    android:textColor="@color/TextReverse"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="5dp"
+                    android:maxLines="1"
+                    tools:text="user2"/>
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="5dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="10dp"
                 android:textColor="@color/dark"
                 style="@style/font_size_30"
                 android:text="@string/string_auto_sign"/>
 
-
         </LinearLayout>
-
 
     </FrameLayout>
 
@@ -88,14 +114,12 @@
             android:layout_height="60dp"
             android:id="@+id/avatarLayout">
 
-            <com.taiqiwen.base_framework.ui.CircleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/avatar"
-                android:src="@drawable/hugh"
-                app:civ_border_width="2dp"
-                app:civ_border_color="@color/dark"/>
+                app:roundedCornerRadius="8dp"
+                app:placeholderImage="@drawable/default_user_icon"/>
 
         </FrameLayout>
 
@@ -109,6 +133,7 @@
                 style="@style/font_size_26"
                 android:id="@+id/textViewForMeasure"
                 android:layout_width="wrap_content"
+                android:alpha="0"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="这里有一些礼物赠语这里有一些礼物赠语这里有一些礼物赠语这里有一些礼物赠语这里有"

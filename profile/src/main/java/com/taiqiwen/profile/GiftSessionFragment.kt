@@ -1,5 +1,8 @@
 package com.taiqiwen.profile
 
+import android.graphics.Color
+import android.graphics.DashPathEffect
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,8 +13,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ConvertUtils
+import com.taiqiwen.base_framework.ToastHelper
+import com.taiqiwen.base_framework.ui.LoadingDialog
+import com.taiqiwen.base_framework.ui.divider.HorizontalDividerItemDecoration
 import com.taiqiwen.profile.giftsession.GiftSessionAdapter
 import com.taiqiwen.profile.giftsession.animator.FadeInLeftAnimator
+import com.test.account_api.AccountServiceUtil
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,23 +33,28 @@ class GiftSessionFragment : Fragment()/*, GiftCardView.OnCheckOut */ {
     private val animator = FadeInLeftAnimator()
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: GiftSessionViewModel
+    private var loadingDialog: LoadingDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        retainInstance = true;
-        arguments?.let {
-            //param1 = it.getString(ARG_PARAM1)
-            //param2 = it.getString(ARG_PARAM2)
-        }
+        retainInstance = true
         viewModel = ViewModelProvider(this).get(GiftSessionViewModel::class.java)
-        viewModel.getGiftList().observe(this, Observer {
-            refreshGiftList()
-        })
+
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        if (loadingDialog == null) {
+            loadingDialog = activity?.let { LoadingDialog(it) }
+        }
+        loadingDialog?.show()
         viewModel.refreshUserStatus()
+        viewModel.fetchGiftList(AccountServiceUtil.getSerVice().getCurUserId()) { result ->
+            loadingDialog?.dismiss()
+            if (!result) {
+                ToastHelper.showToast("网络错误")
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -50,47 +63,43 @@ class GiftSessionFragment : Fragment()/*, GiftCardView.OnCheckOut */ {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-/*        giftCardView = view.findViewById(R.id.gc_shop)
-        giftCardView.setCardTip("您的礼物将会被送给:")
-        giftCardView.setOnCheckOut(Buyer("", "xxx群组",
-                "xxxx", "未接受自动退换:3天"),
-                this)*/
         recyclerView = view.findViewById(R.id.giftList)
-        recyclerView.apply {
-            itemAnimator = animator.apply {
-                addDuration = 500
-                removeDuration = 500
-
+        val paint = Paint()
+        paint.strokeWidth = 5f
+        paint.color = Color.BLUE
+        paint.isAntiAlias = true
+        paint.pathEffect = DashPathEffect(floatArrayOf(25.0f, 25.0f), 0F)
+        recyclerView.addItemDecoration(
+            HorizontalDividerItemDecoration.Builder(context)
+                .paint(paint)
+                .build()
+        )
+        viewModel.getGiftList().observe(viewLifecycleOwner, Observer {
+            if (it.isEmpty()) {
+                view.findViewById<View>(R.id.giftList).visibility = View.GONE
+                view.findViewById<View>(R.id.gift_status_hint).visibility = View.VISIBLE
             }
-            adapter = GiftSessionAdapter(context, viewModel.getGiftList().value!!)
-            layoutManager = LinearLayoutManager(context)
-            addItemDecoration(SpacesItemDecoration(100));
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    val layoutManager: LinearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-                    val lastVisiblePosition = layoutManager.findLastVisibleItemPosition()
-                    Log.d("ttest", "  $firstVisibleItemPosition $lastVisiblePosition")
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        //暂停
-/*                        for (i in firstVisibleItemPosition until lastVisiblePosition) {
-                            val holder = recyclerView.findViewHolderForAdapterPosition(i) as GiftSessionAdapter.ViewHolder
-                            holder.avatarLayout.postDelayed({
-                                val bubbleWindow = holder.wordsBubble
-                                if (bubbleWindow?.isShowing == false) {
-                                    bubbleWindow.show(holder.avatarLayout, -holder.offSet, holder.offSet)
-                                }
-                            }, 500)
-                        }*/
-                    }
-                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                        //滑动
-                        (recyclerView.adapter as GiftSessionAdapter).dismissAllBubbleViews()
-                    }
+            recyclerView.apply {
+                itemAnimator = animator.apply {
+                    addDuration = 500
+                    removeDuration = 500
+
                 }
-            })
-        }
+                adapter = GiftSessionAdapter(context, it)
+                layoutManager = LinearLayoutManager(context)
+                //addItemDecoration(SpacesItemDecoration(100));
+                addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        recyclerView.layoutManager as LinearLayoutManager
+                        if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                            (recyclerView.adapter as GiftSessionAdapter).dismissAllBubbleViews()
+                        }
+                    }
+                })
+            }
+        })
+
 
         viewModel.getLoginStatus().observe(viewLifecycleOwner, Observer {isLoggedIn ->
             if (isLoggedIn) {
@@ -104,13 +113,11 @@ class GiftSessionFragment : Fragment()/*, GiftCardView.OnCheckOut */ {
 
     }
 
-/*    override fun ok(vid: Int) {
-        Toast.makeText(context, "thank you", Toast.LENGTH_LONG).show()
-        giftCardView.restore();
-    }*/
-
-    private fun refreshGiftList() {
-
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (!isVisibleToUser && this::recyclerView.isInitialized) {
+            (recyclerView.adapter as GiftSessionAdapter).dismissAllBubbleViews()
+        }
     }
 
     companion object {
