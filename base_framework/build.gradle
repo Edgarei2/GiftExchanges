@@ -45,4 +45,8 @@ dependencies {
     implementation('com.mikepenz:aboutlibraries:8.3.0@aar') { transitive = true }
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
 
+    implementation 'com.nightonke:boommenu:2.1.1'
+
+    implementation "org.greenrobot:eventbus:3.1.1"
+
 }

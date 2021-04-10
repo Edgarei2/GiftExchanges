@@ -8,100 +8,126 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
-    <FrameLayout
-        android:layout_width="300dp"
-        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <com.taiqiwen.profile.ui.GiftCardView
-            android:id="@+id/giftCard"
+        <FrameLayout
             android:layout_width="300dp"
-            android:layout_height="200dp"
-            card:buttonByText="查看"
-            card:buttonCheckText="签收"
-            card:cardGiftTitle="礼物卡" />
+            android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/giftMessage"
-            android:layout_width="300dp"
-            android:layout_height="200dp"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
+            <com.taiqiwen.profile.ui.GiftCardView
+                android:id="@+id/giftCard"
+                android:layout_width="300dp"
+                android:layout_height="200dp"
+                card:buttonByText="查看"
+                card:buttonCheckText="签收"
+                card:cardGiftTitle="礼物卡" />
 
             <LinearLayout
-                android:id="@+id/gift_description_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:id="@+id/giftMessage"
+                android:layout_width="300dp"
+                android:layout_height="200dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
 
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/gift_icon"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    app:roundedCornerRadius="8dp" />
-
-                <TextView
-                    android:id="@+id/gift_title"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/gift_description_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:textColor="@color/dark"
-                    android:maxLines="2"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    style="@style/font_size_34"
-                    tools:text="礼物名称" />
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-            </LinearLayout>
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/gift_icon"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        app:roundedCornerRadius="8dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical">
+                    <TextView
+                        android:id="@+id/gift_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textColor="@color/dark"
+                        android:maxLines="2"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        style="@style/font_size_34"
+                        tools:text="礼物名称" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/font_size_34"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/TextReverse4"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:text="来自" />
+
+                    <TextView
+                        android:id="@+id/gift_sender"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:layout_weight="1"
+                        style="@style/font_size_34"
+                        android:textColor="@color/TextReverse"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="5dp"
+                        android:maxLines="1"
+                        tools:text="user2"/>
+
+                </LinearLayout>
 
                 <TextView
-                    style="@style/font_size_34"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/TextReverse4"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:text="来自" />
-
-                <TextView
-                    android:id="@+id/gift_sender"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:layout_weight="1"
-                    style="@style/font_size_34"
-                    android:textColor="@color/TextReverse"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginStart="5dp"
-                    android:maxLines="1"
-                    tools:text="user2"/>
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/dark"
+                    style="@style/font_size_30"
+                    android:text="@string/string_auto_sign"/>
 
             </LinearLayout>
 
-            <TextView
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/img_refuse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/dark"
-                style="@style/font_size_30"
-                android:text="@string/string_auto_sign"/>
+                android:src="@drawable/refuse"/>
 
         </LinearLayout>
 
-    </FrameLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="300dp"

@@ -176,6 +176,25 @@ object ProfileApi {
             .map { it.ownedGifts }
     }
 
+    fun fetchOwnedGiftsWithoutSenderInfo(userId: String?, cb: (List<GiftDetailDTO>?) -> Unit) {
+        service.getOwnedGifts(userId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<OwnedGiftsResponseDTO?>{
+                override fun onComplete() { }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onNext(t: OwnedGiftsResponseDTO) {
+                    cb.invoke(t.ownedGifts)
+                }
+
+                override fun onError(e: Throwable) {
+                    cb.invoke(null)
+                }
+            })
+    }
+
     fun fetchOwnedGiftsDetail(userId: String?, cb: ((List<Pair<GiftDetailDTO, String?>>) -> Unit)?) {
         val receivedGifts = fetchReceivedGifts(userId)
         val ownedGifts = fetchOwnedGifts(userId)
@@ -287,6 +306,71 @@ object ProfileApi {
                 }
             })
     }
+
+    fun sendGift(senderUid: String?,
+                 receiverUid: String?,
+                 giftId: String?,
+                 words: String?,
+                 cb: (Boolean) -> Unit) {
+        service.sendGift(senderUid, receiverUid, giftId, words)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<SendGiftResponseDTO?> {
+                override fun onComplete() { }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onNext(t: SendGiftResponseDTO) {
+                    cb.invoke(t.sendResult == "1")
+                }
+
+                override fun onError(e: Throwable) {
+                    cb.invoke(false)
+                }
+            })
+    }
+
+    fun checkoutAllGifts(exchangeObjIds: String?,
+                        giftObjIds: String?,
+                        owner: String?,
+                        cb: (String?) -> Unit) {
+        service.checkoutAllGifts(exchangeObjIds, giftObjIds, owner)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<CheckoutAllGiftsResponseDTO?> {
+                override fun onComplete() { }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onNext(t: CheckoutAllGiftsResponseDTO) {
+                    cb.invoke(t.result)
+                }
+
+                override fun onError(e: Throwable) {
+                    cb.invoke(null)
+                }
+            })
+    }
+
+    fun declineAllGifts(exchangeObjIds: String?,
+                        cb: (String?) -> Unit) {
+        service.declineAllGifts(exchangeObjIds)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<DeclineAllGiftsResponseDTO?> {
+                override fun onComplete() { }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onNext(t: DeclineAllGiftsResponseDTO) {
+                    cb.invoke(t.result)
+                }
+
+                override fun onError(e: Throwable) {
+                    cb.invoke(null)
+                }
+            })
+    }
 }
 
 interface IProfileNetWork {
@@ -340,6 +424,29 @@ interface IProfileNetWork {
         @Field("user_id")userId: String?
     ): Observable<CheckoutGiftResponseDTO?>
 
+    @FormUrlEncoded
+    @POST("sendGift")
+    fun sendGift(
+        @Field("sender_uid") senderUid: String?,
+        @Field("receiver_uid") receiverUid: String?,
+        @Field("gift_id") giftId: String?,
+        @Field("words") words: String?
+    ): Observable<SendGiftResponseDTO?>
+
+    @FormUrlEncoded
+    @POST("checkoutAllGifts")
+    fun checkoutAllGifts(
+        @Field("exchange_obj_ids") exchangeObjIds: String?,
+        @Field("gift_obj_ids") giftObjIds: String?,
+        @Field("owner") owner: String?
+    ): Observable<CheckoutAllGiftsResponseDTO?>
+
+    @FormUrlEncoded
+    @POST("declineAllGifts")
+    fun declineAllGifts(
+        @Field("exchange_obj_ids") exchangeObjIds: String?
+    ): Observable<DeclineAllGiftsResponseDTO?>
+
 }
 
 class FriendsResponseDTO(
@@ -380,4 +487,16 @@ class UnCheckedGiftsResponseDTO(
 
 class CheckoutGiftResponseDTO(
     @SerializedName("checkout_result") var checkoutResult: String?
+)
+
+class SendGiftResponseDTO(
+    @SerializedName("send_result") var sendResult: String?
+)
+
+class CheckoutAllGiftsResponseDTO(
+    @SerializedName("checkout_all_result") var result: String?
+)
+
+class DeclineAllGiftsResponseDTO(
+    @SerializedName("decline_all_result") var result: String?
 )

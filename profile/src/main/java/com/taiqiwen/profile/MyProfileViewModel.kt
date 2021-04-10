@@ -42,7 +42,7 @@ class MyProfileViewModel : ViewModel()  {
         return collectedGifts
     }
 
-    fun refreshUserStatus(fetchErrCb: (() -> Unit)?) {
+    fun refreshUserStatus(fetchCb: ((Boolean) -> Unit)?) {
         isLoggedIn.value = AccountServiceUtil.getSerVice().getCurUser() != null
         AccountServiceUtil.getSerVice().getCurUser()?.let {
             userName.value = it.userName
@@ -51,8 +51,9 @@ class MyProfileViewModel : ViewModel()  {
             ProfileApi.fetchCurUserFriends(it.userId){ success, friendsResponseDTO ->
                 if (success) {
                     friends.value = friendsResponseDTO?.friends
+                    fetchCb?.invoke(true)
                 } else {
-                    fetchErrCb?.invoke()
+                    fetchCb?.invoke(false)
                 }
             }
             GiftServiceUtil.getSerVice().getCollectedGifts(it.userId) { collection ->

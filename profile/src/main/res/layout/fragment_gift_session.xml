@@ -8,52 +8,6 @@
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
     tools:context=".GiftSessionFragment">
-<!--
-    <LinearLayout
-        android:id="@+id/activity_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#dddddd"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <com.taiqiwen.profile.ui.GiftCardView
-            android:layout_width="300dp"
-            android:layout_height="200dp"
-            card:bgPackColor="#56abe4"
-            card:bgStartColor="#11cd6e"
-            card:buttonByText="接受"
-            card:buttonCheckText="确定"
-            card:buyButtonColor="#11cd6e"
-            card:cardBgColor="#33475f"
-            card:cardGiftLogo="@mipmap/ic_launcher"
-            card:cardGiftTitle="礼物卡"
-            card:checkButtonColor="#2c2c2c"
-            card:priceTextColor="#fff" />
-
-        <com.taiqiwen.profile.ui.GiftCardView
-            android:layout_width="300dp"
-            android:layout_height="200dp"
-            card:bgEndColor="#56abe4"
-            card:bgPackColor="#36ab60"
-            card:bgStartColor="#11cd6e"
-            card:buyButtonColor="#56abe4"
-            card:cardBgColor="#fff"
-            card:cardGiftLogo="@mipmap/gift1"
-            card:cardGiftPrice="520"
-            card:checkButtonColor="#00bb9c" />
-
-
-        <com.taiqiwen.profile.ui.GiftCardView
-            android:id="@+id/gc_shop"
-            android:layout_width="300dp"
-            android:layout_height="200dp"
-            card:buttonByText="赠送"
-            card:buttonCheckText="确定"
-            card:cardGiftPrice="520"
-            card:cardGiftTitle="礼物卡" />
-
-    </LinearLayout>-->
 
     <TextView
         android:id="@+id/gift_status_hint"
@@ -79,5 +33,13 @@
         tools:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"/>
 
 </FrameLayout>

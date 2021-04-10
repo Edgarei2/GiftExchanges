@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
+        <activity android:name=".SendGiftActivity"></activity>
         <activity
-            android:theme="@style/AppTheme"
-            android:name=".GiftsGalleryActivity"></activity>
+            android:name=".GiftsGalleryActivity"
+            android:theme="@style/AppTheme" />
         <activity android:name=".LoginActivity" />
     </application>
 

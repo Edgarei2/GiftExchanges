@@ -44,33 +44,32 @@
             style="@style/TabView"
             app:imgContainerPadding="@dimen/tab_img_container_padding"
             app:imgDimension="@dimen/tab_img_size"
-            app:imgDrawable="@drawable/tab_chat"
+            app:imgDrawable="@drawable/tab_store"
             app:imgMargin="@dimen/tab_img_margin"
             app:textColor="@color/tab_chat_text_selector"
             app:textSize="@dimen/tab_view_text_size"
-            app:textShown="false"
-            app:textString="聊天" />
+            app:textString="礼物展示" />
 
         <com.isanwenyu.tabview.TabView
             android:id="@+id/tb_app"
             style="@style/TabView"
             app:imgContainerPadding="@dimen/custom_img_container_padding"
             app:imgDimension="@dimen/tab_img_size"
-            app:imgDrawable="@drawable/tab_app"
+            app:imgDrawable="@drawable/tab_chat"
             app:imgMargin="@dimen/tab_img_margin"
-            app:tabRippleEnable="false"
+            app:badge_none_show="false"
+            app:badge_count="12"
             app:textColor="@color/tab_app_text_selector"
             app:textSize="@dimen/tab_view_text_size"
-            app:textString="应用" />
+            app:textString="社区" />
 
         <com.isanwenyu.tabview.TabView
             android:id="@+id/tb_pic"
             style="@style/TabView"
             app:badge_color="@android:color/holo_green_dark"
-            app:badge_count="9"
-            app:badge_none_show="true"
+            app:badge_none_show="false"
             app:imgContainerPadding="@dimen/custom_img_container_padding"
-            app:imgDrawable="@drawable/tab_pic"
+            app:imgDrawable="@drawable/tab_gift"
             app:imgMargin="@dimen/tab_img_margin"
             app:rv_centered="false"
             app:rv_color="@android:color/holo_green_dark"
@@ -81,14 +80,12 @@
             app:rv_zoomScale="1.05"
             app:textColor="@color/tab_pic_text_selector"
             app:textSize="@dimen/tab_view_text_size"
-            app:textString="图片" />
+            app:textString="收礼" />
 
         <com.isanwenyu.tabview.TabView
             android:id="@+id/tb_user"
             style="@style/TabView"
             app:badge_color="@android:color/holo_orange_dark"
-            app:badge_count="888"
-            app:badge_none_show="true"
             app:badge_padding_right="@dimen/tab_img_container_padding"
             app:badge_padding_top="@dimen/tab_img_container_padding"
             app:imgContainerPadding="@dimen/custom_img_container_padding"

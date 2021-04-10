@@ -44,7 +44,7 @@ object AccountApi {
 
                 override fun onNext(t: LogInResponseDTO) {
                     val list = t.result
-                    if (list?.isNullOrEmpty() == true) {
+                    if (list.isNullOrEmpty()) {
                         cb?.invoke(false)
                         accountStatusCb?.invoke(null)
                     } else {

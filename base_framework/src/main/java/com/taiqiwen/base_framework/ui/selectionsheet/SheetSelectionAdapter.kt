@@ -95,10 +95,10 @@ class SheetSelectionAdapter(
             val extraInfo = item.extraInfo
             extraInfo?.getString(KEY_CHECKOUT_STATUS)?.let { checkoutStatus ->
                 containerView.context?.let {
-                    if (checkoutStatus == "0") {
-                        textView.setTextColor(it.resources.getColor(R.color.colorAccent))
-                    } else {
-                        textView.setTextColor(it.resources.getColor(R.color.checked_gift))
+                    when (checkoutStatus) {
+                        "0" -> textView.setTextColor(it.resources.getColor(R.color.unchecked_gift))
+                        "1" -> textView.setTextColor(it.resources.getColor(R.color.checked_gift))
+                        "2" -> textView.setTextColor(it.resources.getColor(R.color.colorAccent))
                     }
                 }
 

@@ -1,6 +1,7 @@
 package com.taiqiwen.base_framework;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,6 +18,8 @@ public class GiftApplication extends Application {
 
     private static GiftApplication appInstance;
 
+    public static Context context;
+
     public static GiftApplication getInstance(){
         return appInstance;
     }
@@ -27,6 +30,7 @@ public class GiftApplication extends Application {
     public void onCreate() {
         super.onCreate();
         appInstance = this;
+        context = getApplicationContext();
         Fresco.initialize(this);
 
         // 设置 Toast 拦截器
@@ -58,6 +62,10 @@ public class GiftApplication extends Application {
 
     public void logOut() {
         giftUser = null;
+    }
+
+    public static Context getContext() {
+        return context;
     }
 
 }

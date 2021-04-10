@@ -1,6 +1,5 @@
 package com.taiqiwen.profile
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,6 @@ import com.facebook.drawee.view.SimpleDraweeView
 import com.taiqiwen.base_framework.ToastHelper
 import com.taiqiwen.base_framework.ui.SheetHelper
 import com.taiqiwen.base_framework.ui.SheetHelper.KEY_CHECKOUT_STATUS
-import com.taiqiwen.base_framework.ui.SheetHelper.KEY_RECEIVER
 import com.taiqiwen.profile.ui.AvatarLayout
 import com.test.account_api.AccountServiceUtil
 
@@ -38,6 +36,7 @@ class MyProfileFragment : Fragment() {
     private lateinit var ivBackGround: SimpleDraweeView
     private lateinit var avatarLayout: AvatarLayout
     private lateinit var viewModel: MyProfileViewModel
+    private lateinit var shareViewModel: ShareViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +63,12 @@ class MyProfileFragment : Fragment() {
     private fun dynamicRefresh() {
         val curUserId = AccountServiceUtil.getSerVice().getCurUser()?.userId
         AccountServiceUtil.getSerVice().refresh(curUserId) {
-            viewModel.refreshUserStatus {
-                ToastHelper.showToast("网络错误")
+            viewModel.refreshUserStatus { result ->
+                if (result) {
+                    shareViewModel.friendsUidList.value = viewModel.getFriends().value
+                } else {
+                    ToastHelper.showToast("网络错误")
+                }
             }
         }
     }
@@ -76,6 +79,9 @@ class MyProfileFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        shareViewModel = ViewModelProvider(requireActivity()).get(ShareViewModel::class.java)
+
         ivBackGround = view.findViewById(R.id.iv_bg)
         avatarLayout = view.findViewById(R.id.avatar)
         viewModel.getUserAvatarUrl().observe(viewLifecycleOwner, Observer {
@@ -132,10 +138,10 @@ class MyProfileFragment : Fragment() {
                         val receiver = giftSentStatusDetailDTOList?.get(position)?.receiver
                         val checkoutStatus = item.extraInfo?.getString(KEY_CHECKOUT_STATUS)
                         viewModel.fetchCertainFriendName(receiver) { receiverName ->
-                            if (checkoutStatus == "0") {
-                                ToastHelper.showToast("${receiverName}还未签收您的礼物!")
-                            } else {
-                                ToastHelper.showToast("${receiverName}已经签收您的礼物!")
+                            when (checkoutStatus) {
+                                "0" -> ToastHelper.showToast("${receiverName}还未签收您的礼物")
+                                "1" -> ToastHelper.showToast("${receiverName}已经签收您的礼物")
+                                "2" -> ToastHelper.showToast("${receiverName}拒收了您的礼物")
                             }
                         }
                     }

@@ -12,4 +12,13 @@
     <string name="to_credit"><u>兑换为积分</u></string>
     <string name="to_real"><u>提现</u></string>
 
+    <string name="give">赠送礼物</string>
+    <string name="give_des">从您拥有的礼物中挑选一件赠送给朋友</string>
+    <string name="refresh_gift_list">刷新</string>
+    <string name="refresh_gift_list_des">刷新您的待签收礼物列表</string>
+    <string name="checkout_all">签收</string>
+    <string name="checkout_all_des">签收全部未签收礼物</string>
+    <string name="decline_all">拒收</string>
+    <string name="decline_all_des">拒收全部未签收礼物</string>
+
 </resources>

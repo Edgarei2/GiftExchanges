@@ -8,11 +8,16 @@ import com.andexert.library.RippleView;
 import com.beyondsw.lib.GiftServiceUtil;
 import com.isanwenyu.tabview.TabGroup;
 import com.isanwenyu.tabview.TabView;
+import com.taiqiwen.base_framework.EventBusWrapper;
 import com.taiqiwen.base_framework.LocalStorageHelper;
+import com.taiqiwen.base_framework.model.GiftChangedEvent;
 import com.taiqiwen.base_framework.ui.titlebar.CommonTitleBar;
 import com.taiqiwen.profile_api.ProfileServiceUtil;
 import com.taiqiwen.testlibrary.TestUtil;
 import com.test.account_api.AccountServiceUtil;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -35,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
         initView();
-
+        EventBusWrapper.register(this);
         AccountServiceUtil.getSerVice().setCurUser(LocalStorageHelper.loadUserInfo(this));
     }
 
@@ -85,10 +90,10 @@ public class MainActivity extends AppCompatActivity {
                         mChatTabView.setChecked(true);
                     }
                 });
-        ((TabView) mTabGroup.getChildAt(1)).setBadgeCount(999)
+/*        ((TabView) mTabGroup.getChildAt(1)).setBadgeCount(999)
                 .setmDefaultTopPadding((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()))
                 .setBadgeShown(true)
-                .setTabRippleEnable(false);
+                .setTabRippleEnable(false);*/
 
     }
 
@@ -117,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 ((TabView) mTabGroup.getChildAt(position)).setChecked(true);
                 switch (position) {
                     case TAB_CHAT: titleBar.setCenterText("礼物展示"); break;
-                    case TAB_PIC: titleBar.setCenterText("礼物"); break;
+                    case TAB_PIC: titleBar.setCenterText("收礼"); break;
                     case TAB_USER: {
                         titleBar.setCenterText("我");
                         if(!AccountServiceUtil.getSerVice().isLogged()) {
@@ -144,5 +149,23 @@ public class MainActivity extends AppCompatActivity {
     @Override protected void onStop() {
         LocalStorageHelper.saveUserInfo(this, AccountServiceUtil.getSerVice().getCurUser());
         super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void logCheckoutEvent(GiftChangedEvent event) {
+        int newNumber = event.getUnchecked();
+        if (newNumber > 0) {
+            ((TabView) mTabGroup.getChildAt(2)).setBadgeCount(event.getUnchecked())
+                    .setmDefaultTopPadding((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics()))
+                    .setBadgeShown(true);
+        } else {
+            ((TabView) mTabGroup.getChildAt(2)).setBadgeShown(false);
+        }
+
+    }
+
+    @Override protected void onDestroy() {
+        EventBusWrapper.unregister(this);
+        super.onDestroy();
     }
 }
