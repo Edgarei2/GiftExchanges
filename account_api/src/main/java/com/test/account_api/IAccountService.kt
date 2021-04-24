@@ -18,4 +18,6 @@ interface IAccountService {
 
     fun setCurUser(giftUser: GiftUser?)
 
+    fun updateLastOnLineTime()
+
 }

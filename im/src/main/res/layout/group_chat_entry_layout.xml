@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="60dp"
+    android:layout_height="75dp"
+    android:padding="5dp">
+
+    <FrameLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/group_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:placeholderImage="@drawable/group"
+            app:roundAsCircle="true"/>
+
+        <View
+            android:id="@+id/unread_label"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
+            android:background="@drawable/red_round"
+            android:visibility="invisible"
+            tools:visibility="visible"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/group_name"
+        android:layout_width="50dp"
+        android:layout_height="15dp"
+        android:gravity="center"
+        style="@style/font_size_20"
+        tools:text="华东师范大学"
+        android:maxLines="1"
+        android:ellipsize="end"/>
+
+</LinearLayout>

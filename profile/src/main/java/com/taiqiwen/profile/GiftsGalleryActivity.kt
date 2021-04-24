@@ -106,7 +106,7 @@ class GiftsGalleryActivity : AppCompatActivity() {
             val takeOut = viewHolder?.getView<TextView>(R.id.change_to_real)
             val credit = extraInfo[position][KEY_GIFT_CREDIT]
             val curUserCredit = AccountServiceUtil.getSerVice().getCurUser()?.curCredit.toString()
-            val curUserObjectId = AccountServiceUtil.getSerVice().getCurUser()?.objectId.toString()
+            val curUserObjectId = AccountServiceUtil.getSerVice().getCurUser()?.objId.toString()
             val giftObjectId = extraInfo[position][KEY_GIFT_OBJ_ID]
 
             if (extraInfo[position][KEY_GIFT_CHANGED_STATUS] == "1") {

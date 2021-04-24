@@ -1,6 +1,5 @@
 package com.test.account
 
-import android.util.Log
 import com.google.gson.annotations.SerializedName
 import com.taiqiwen.base_framework.model.GiftUser
 import io.reactivex.Observable
@@ -84,6 +83,21 @@ object AccountApi {
             })
     }
 
+    fun updateLastOnLineTime(objectId: String?, randomStr: String) {
+        service.updateLastOnLineTime(objectId, randomStr)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<UpdateResponseDTO?> {
+                override fun onComplete() {}
+
+                override fun onSubscribe(d: Disposable) {}
+
+                override fun onNext(t: UpdateResponseDTO) { }
+
+                override fun onError(e: Throwable) { }
+            })
+    }
+
 }
 
 interface IServiceNetWork {
@@ -96,8 +110,14 @@ interface IServiceNetWork {
     @FormUrlEncoded
     @POST("refreshUserInfo")
     fun refreshCurUser(@Field("user_id") userId: String?): Observable<RefreshResponseDTO?>
+
+    @FormUrlEncoded
+    @POST("updateLastOnLineTime")
+    fun updateLastOnLineTime(@Field("object_id") objectId: String?, @Field("random_str") randomStr: String?): Observable<UpdateResponseDTO?>
 }
 
 class LogInResponseDTO(@SerializedName("results") var result: List<GiftUser>?)
 
 class RefreshResponseDTO(@SerializedName("cur_user_info") var result: GiftUser?)
+
+class UpdateResponseDTO(@SerializedName("result") var result: String?)

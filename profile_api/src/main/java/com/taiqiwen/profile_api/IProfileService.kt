@@ -9,8 +9,6 @@ interface IProfileService {
 
     fun getGiftSessionFragment(): Fragment?
 
-    fun getDebugInfo(): String
-
     fun startLoginActivity(context: Context)
 
 }

@@ -17,6 +17,8 @@
             <option value="$PROJECT_DIR$/base_framework" />
             <option value="$PROJECT_DIR$/gift" />
             <option value="$PROJECT_DIR$/gift_api" />
+            <option value="$PROJECT_DIR$/im" />
+            <option value="$PROJECT_DIR$/im_api" />
             <option value="$PROJECT_DIR$/profile" />
             <option value="$PROJECT_DIR$/profile_api" />
             <option value="$PROJECT_DIR$/testlibrary" />

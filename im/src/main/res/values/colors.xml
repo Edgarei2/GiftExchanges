@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="Secondary2">#FE2C55</color>
+    <color name="TextReverse4">#57161823</color>
+    <color name="BGPlaceholderDefault">#a3a3c2</color>
+    <color name="TextTertiary">#80161823</color>
+    <color name="LineReverse2">#1E161823</color>
+
+</resources>

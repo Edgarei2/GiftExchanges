@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +21,7 @@ import com.nightonke.boommenu.ButtonEnum
 import com.nightonke.boommenu.Piece.PiecePlaceEnum
 import com.taiqiwen.base_framework.DialogHelper
 import com.taiqiwen.base_framework.EventBusWrapper
+import com.taiqiwen.base_framework.ShareViewModel
 import com.taiqiwen.base_framework.ToastHelper
 import com.taiqiwen.base_framework.model.GiftChangedEvent
 import com.taiqiwen.base_framework.ui.LoadingDialog

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/list_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:roundAsCircle="true"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.9"
+                    android:textColor="@color/dark"
+                    style="@style/font_size_36"
+                    tools:text="好友A"
+                    android:maxLines="1"
+                    android:ellipsize ="end" />
+
+                <TextView
+                    android:id="@+id/type_info"
+                    style="@style/font_size_16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/session_type"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="好友"
+                    android:textColor="#ffffff" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/last_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:alpha="0.5"
+                android:maxLines="1"
+                android:ellipsize ="end"
+                android:textColor="@color/TextReverse4"
+                style="@style/font_size_30"
+                tools:text="你好"
+                tools:textColor="@color/dark" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+<!--        <View
+            android:id="@+id/new_session_label"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="0.5dp"
+            android:layout_marginLeft="0.5dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/red_round"
+            android:visibility="invisible"
+            tools:visibility="visible"/>-->
+
+        <com.itingchunyu.badgeview.BadgeTextView
+            android:id="@+id/new_session_label"
+            android:layout_width="35dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="0.5dp"
+            android:layout_marginEnd="14dp"
+            app:badge_none_show="false"
+            app:badge_count="1"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider_line"
+        android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_height="1px"
+        android:background="@color/LineReverse2" />
+
+</LinearLayout>
+

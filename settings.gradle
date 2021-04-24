@@ -1,3 +1,5 @@
+include ':im_api'
+include ':im'
 include ':gift_api'
 include ':gift'
 include ':account_api'

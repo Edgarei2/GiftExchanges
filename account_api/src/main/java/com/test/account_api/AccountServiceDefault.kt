@@ -19,4 +19,6 @@ class AccountServiceDefault: IAccountService {
     override fun setCurUser(giftUser: GiftUser?) { }
 
     override fun getCurUserId(): String? = null
+
+    override fun updateLastOnLineTime() { }
 }

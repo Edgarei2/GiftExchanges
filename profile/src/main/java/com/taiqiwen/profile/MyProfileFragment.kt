@@ -12,11 +12,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.beyondsw.lib.GiftServiceUtil
 import com.facebook.drawee.view.SimpleDraweeView
+import com.taiqiwen.base_framework.ShareViewModel
 import com.taiqiwen.base_framework.ToastHelper
+import com.taiqiwen.base_framework.model.GiftUser
 import com.taiqiwen.base_framework.ui.SheetHelper
 import com.taiqiwen.base_framework.ui.SheetHelper.KEY_CHECKOUT_STATUS
 import com.taiqiwen.profile.ui.AvatarLayout
 import com.test.account_api.AccountServiceUtil
+import kotlin.concurrent.thread
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -65,7 +68,11 @@ class MyProfileFragment : Fragment() {
         AccountServiceUtil.getSerVice().refresh(curUserId) {
             viewModel.refreshUserStatus { result ->
                 if (result) {
-                    shareViewModel.friendsUidList.value = viewModel.getFriends().value
+                    thread {
+                        Thread.sleep(2500)
+                        shareViewModel.friendsUidList.postValue(viewModel.getFriends().value)
+                    }
+                    //shareViewModel.friendsUidList.value = viewModel.getFriends().value
                 } else {
                     ToastHelper.showToast("网络错误")
                 }
@@ -124,10 +131,21 @@ class MyProfileFragment : Fragment() {
         view.findViewById<View>(R.id.credit_area).setOnClickListener {
             ToastHelper.showToast("您的积分为${viewModel.getCredit().value?:0}")
         }
+        shareViewModel.friendsUidList.observe(viewLifecycleOwner, Observer {  list ->
+            if (list == null) return@Observer
+            viewModel.fetchFriendsDetail(list) { users ->
+                val map = mutableMapOf<String, GiftUser>()
+                for (user in users) {
+                    map[user.userId] = user
+                }
+                shareViewModel.friendsDetailList.value = map
+            }
+        })
         view.findViewById<View>(R.id.friends_area).setOnClickListener {
-            val friends = viewModel.getFriends().value ?: return@setOnClickListener
-            viewModel.fetchFriendsDetail(friends) { users ->
-                SheetHelper.showSheet(context, "我的朋友", users, noItemHintText = "您还没有朋友") { item, position -> }
+            val users = shareViewModel.friendsDetailList.value?.values?.toList() ?: return@setOnClickListener
+            SheetHelper.showSheet(context, "我的朋友", users, noItemHintText = "您还没有朋友") { item, position ->
+                if (position >= users.size) return@showSheet
+                shareViewModel.sessionExtra.value = users[position]
             }
         }
         view.findViewById<View>(R.id.item2).setOnClickListener {

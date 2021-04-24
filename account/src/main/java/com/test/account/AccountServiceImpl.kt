@@ -44,4 +44,9 @@ class AccountServiceImpl: IAccountService {
     override fun getCurUserId(): String? {
         return GiftApplication.getInstance().giftUser?.userId
     }
+
+    override fun updateLastOnLineTime() {
+        val randomStr = (0 .. 1000).random().toString()
+        AccountApi.updateLastOnLineTime(getCurUser()?.objId, randomStr)
+    }
 }

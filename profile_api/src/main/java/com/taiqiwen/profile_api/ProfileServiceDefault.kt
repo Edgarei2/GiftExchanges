@@ -13,10 +13,6 @@ class ProfileServiceDefault: IProfileService {
         return null
     }
 
-    override fun getDebugInfo(): String {
-        return "default collected"
-    }
-
     override fun startLoginActivity(context: Context) {
     }
 }

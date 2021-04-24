@@ -14,10 +14,6 @@ class ProfileMainService: IProfileService {
         return GiftSessionFragment.newInstance()
     }
 
-    override fun getDebugInfo(): String {
-        return "ProfileMainService collected"
-    }
-
     override fun startLoginActivity(context: Context) {
         LoginActivity.start(context)
     }

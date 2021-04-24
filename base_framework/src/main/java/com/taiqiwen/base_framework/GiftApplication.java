@@ -12,6 +12,7 @@ import com.taiqiwen.base_framework.ui.toast.ToastUtils;
 import com.taiqiwen.base_framework.ui.toast.style.ToastBlackStyle;
 
 import androidx.annotation.Nullable;
+import cn.bmob.v3.Bmob;
 
 
 public class GiftApplication extends Application {
@@ -49,6 +50,7 @@ public class GiftApplication extends Application {
         // 初始化吐司工具类
         ToastUtils.init(this, new ToastBlackStyle(this));
 
+        Bmob.initialize(this, "96e434b1b216c2c8f4e24a450cb9c18c");
     }
 
     @Nullable
