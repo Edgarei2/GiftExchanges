@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.taiqiwen.base_framework.ui.ChatLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".GroupChatActivity">
+
+    <com.taiqiwen.base_framework.ui.titlebar.CommonTitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:bottomShadowHeight="0dp"
+        app:centerText="礼物详情"
+        app:centerTextColor="#ffffff"
+        app:centerType="textView"
+        app:showBottomLine="false"
+        app:statusBarMode="dark"
+        app:leftImageResource="@drawable/backword_line"
+        app:leftType="imageButton"
+        app:rightImageResource="@drawable/regular_more"
+        app:rightType="imageButton" />
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</com.taiqiwen.base_framework.ui.ChatLinearLayout>

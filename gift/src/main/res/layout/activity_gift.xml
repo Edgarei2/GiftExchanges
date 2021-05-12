@@ -123,7 +123,6 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/anchor_v3_comment_header"
                 tools:ignore="UseCompoundDrawables"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

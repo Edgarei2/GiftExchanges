@@ -32,13 +32,8 @@ class GroupEntryLineLayout
         val num = getEntryCount(curContext)
         val endIndex = min(startIndex + num, groupInfo.size)
         for (i in startIndex until endIndex) {
-            val data = mapOf(
-                KEY_ICON_URI to groupInfo[i].icon,
-                KEY_GROUP_NAME to groupInfo[i].name,
-                KEY_HAS_UNREAD to (if (groupInfo[i].hasUnRead) "true" else "false")
-            )
             val entry = GroupEntryLayout(curContext)
-            entry.bind(data)
+            entry.bind(groupInfo[i])
             holder.addView(entry)
         }
         return endIndex

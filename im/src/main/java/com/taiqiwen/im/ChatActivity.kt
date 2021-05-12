@@ -41,7 +41,6 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-        //AndroidBug5497Workaround.assistActivity(this)
         findViewById<View>(R.id.back).setOnClickListener {
             finish()
         }
@@ -59,7 +58,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         initView()
         initMsg()
         titleBar.setCenterText(user.userName)
-        titleBar.setBackgroundResource(R.drawable.shape_gradient);
+        titleBar.setBackgroundResource(R.drawable.shape_gradient)
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
         if (!::adapter.isInitialized) {
@@ -83,7 +82,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
                 val content = inputText.text.toString()
                 if (content.isNotEmpty()) {
                     IMLocalStorageUtil.saveMessage(this, NewMessageEvent(channelId, NewMessage(content, curUserId!!)))
-                    ImApi.sendMessage(channelObjId, content, curUserId) { result ->
+                    ImApi.sendMessage(channelObjId, content, curUserId, user.userId) { result ->
                         if (result == "0") {
                             ToastHelper.showToast("网络错误")
                         }
@@ -143,8 +142,9 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         private const val KEY_CHANNEL_ID = "key_channel_id"
         private const val KEY_CHANNEL_OBJ_ID = "key_channel_obj_id"
 
-        fun start(context: Context, user: GiftUser?, channelId: String?, channelObjId: String?) {
-            if (user == null || channelObjId == null) {
+        fun start(context: Context?, user: GiftUser?, channelId: String?, channelObjId: String?) {
+            if (user == null || channelObjId == null || context == null) {
+                ToastHelper.showToast("网络错误")
                 return
             } else if (!AccountServiceUtil.getSerVice().isLogged()) {
                 ProfileServiceUtil.getSerVice().startLoginActivity(context)

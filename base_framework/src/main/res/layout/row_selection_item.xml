@@ -26,6 +26,14 @@
     android:gravity="center_vertical"
     android:padding="8dp">
 
+    <ImageView
+        android:id="@+id/checked"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/check_friend"
+        android:visibility="gone"/>
+
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/gift_icon"
         android:layout_width="45dp"

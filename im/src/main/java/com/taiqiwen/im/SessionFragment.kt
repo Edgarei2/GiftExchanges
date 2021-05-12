@@ -1,7 +1,6 @@
 package com.taiqiwen.im
 
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.bmob.v3.BmobRealTimeData
 import cn.bmob.v3.listener.ValueEventListener
-import com.isanwenyu.tabview.TabView
 import com.taiqiwen.base_framework.EventBusWrapper
 import com.taiqiwen.base_framework.ShareViewModel
-import com.taiqiwen.base_framework.model.GiftChangedEvent
+import com.taiqiwen.base_framework.model.GiftUser
 import com.taiqiwen.im_api.event.NewMessage
 import com.taiqiwen.im_api.event.NewMessageEvent
 import com.taiqiwen.im_api.event.ReadMessageEvent
@@ -26,8 +24,6 @@ import org.json.JSONObject
 
 class SessionFragment : Fragment() {
 
-    private var param1: String? = null
-    private var param2: String? = null
     private lateinit var viewModel: SessionViewModel
     private lateinit var shareViewModel: ShareViewModel
     private lateinit var recyclerView: RecyclerView
@@ -57,6 +53,9 @@ class SessionFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         viewModel.initSessionList(context)
         viewModel.initGroupList()
+        shareViewModel.friendsDetailList.observe(viewLifecycleOwner, Observer {
+            viewModel.addCondition()
+        })
         val sessionList = viewModel.getSessionList().value ?: emptyList()
         val groupList = viewModel.getGroupList().value ?: emptyList()
         adapter = context?.let { SessionAdapter(it, sessionList, groupList, emptyMap()) }
@@ -70,7 +69,11 @@ class SessionFragment : Fragment() {
                 view.findViewById<View>(R.id.account_status_hint).visibility = View.VISIBLE
             }
         })
-
+        viewModel.getConditionSatisfied().observe(viewLifecycleOwner, Observer {  conditions ->
+            if (conditions == 2) {
+                logNewMessages(viewModel.unReadMsgMap.value, shareViewModel.friendsDetailList.value)
+            }
+        })
         shareViewModel.sessionExtra.observe(viewLifecycleOwner, Observer {  user ->
             viewModel.addNewSession(user)
         })
@@ -78,6 +81,7 @@ class SessionFragment : Fragment() {
             if (userIdList == null) return@Observer
             viewModel.updateChannelObjIdList(userIdList)
         })
+        viewModel.getUnReadMessage()
 
         viewModel.getSessionList().observe(viewLifecycleOwner, Observer { list ->
             var unread = 0
@@ -88,6 +92,9 @@ class SessionFragment : Fragment() {
             adapter?.updateSessionList(list)
             adapter?.notifyItemInserted(list.size)
         })
+        viewModel.getGroupList().observe(viewLifecycleOwner, Observer {  list ->
+            adapter?.updateGroupList(list)
+        })
         // 建立长链接
         viewModel.getChannelObjIdMap().observe(viewLifecycleOwner, Observer { map ->
             if (longLinkEstablished) return@Observer
@@ -96,6 +103,7 @@ class SessionFragment : Fragment() {
             adapter?.updateChannelObjIdMap(map)
             establishLongLink(map)
         })
+
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -158,6 +166,29 @@ class SessionFragment : Fragment() {
         if (event.newMsg.senderUid != AccountServiceUtil.getSerVice().getCurUserId()) {
             shareViewModel.addUnRead(1)
         }
+    }
+
+    private fun logNewMessages(newMessage: Map<String, List<String>>?, friendsDetailList: Map<String, GiftUser>?) {
+        if (newMessage == null) return
+        val curUserId = AccountServiceUtil.getSerVice().getCurUserId()
+        var unRead = 0
+        for ((sendUid, msgList) in newMessage) {
+            if(adapter?.checkSessionExist(sendUid) == false) {
+                shareViewModel.sessionExtra.value = friendsDetailList?.get(sendUid)
+            }
+            val channelId = SessionViewModel.getChannelId(curUserId, sendUid)
+            val lastMsg = msgList[msgList.size - 1]
+            adapter?.updateLatestMessage(
+                NewMessageEvent(
+                    channelId,
+                    NewMessage(lastMsg, sendUid)
+                ),
+                unRead = msgList.size
+            )
+            IMLocalStorageUtil.saveMessage(context, channelId, msgList.map { NewMessage(it, sendUid) })
+            unRead += msgList.size
+        }
+        shareViewModel.addUnRead(unRead)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

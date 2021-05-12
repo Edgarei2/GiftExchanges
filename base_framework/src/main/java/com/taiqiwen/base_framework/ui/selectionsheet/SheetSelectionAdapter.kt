@@ -18,6 +18,7 @@ class SheetSelectionAdapter(
     private val source: List<SheetSelectionItem>,
     private val selectedPosition: Int,
     private val searchNotFoundText: String,
+    private val showChecked: Boolean,
     private val onItemSelectedListener: OnItemSelectedListener?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -46,6 +47,7 @@ class SheetSelectionAdapter(
                 item = items[position],
                 position = position,
                 selected = position == selectedPosition,
+                showChecked = showChecked,
                 onItemSelectedListener = onItemSelectedListener
             )
         }
@@ -79,6 +81,7 @@ class SheetSelectionAdapter(
             item: SheetSelectionItem,
             position: Int,
             selected: Boolean,
+            showChecked: Boolean,
             onItemSelectedListener: OnItemSelectedListener?
         ) {
 /*            val selectedIcon = if (selected) R.drawable.ic_check else 0
@@ -88,8 +91,18 @@ class SheetSelectionAdapter(
             val textView = containerView.findViewById<TextView>(R.id.gift_name)
             containerView.findViewById<SimpleDraweeView>(R.id.gift_icon).setImageURI(item.iconUrl)
             textView.text = item.value
+
+            val checkIcon = containerView.findViewById<View>(R.id.checked)
+
             containerView.setOnClickListener {
                 onItemSelectedListener?.invoke(item, position)
+                if (showChecked) {
+                    if (checkIcon.visibility == View.VISIBLE) {
+                        checkIcon.visibility = View.GONE
+                    } else {
+                        checkIcon.visibility = View.VISIBLE
+                    }
+                }
             }
             //处理业务具体逻辑
             val extraInfo = item.extraInfo
@@ -101,7 +114,6 @@ class SheetSelectionAdapter(
                         "2" -> textView.setTextColor(it.resources.getColor(R.color.colorAccent))
                     }
                 }
-
             }
         }
     }

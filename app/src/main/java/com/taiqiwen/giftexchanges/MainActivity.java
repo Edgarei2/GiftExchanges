@@ -171,6 +171,8 @@ public class MainActivity extends AppCompatActivity {
         GiftUser user = AccountServiceUtil.getSerVice().getCurUser();
         if (user != null) {
             LocalStorageHelper.saveUserInfo(this, user);
+        } else {
+            LocalStorageHelper.saveUserInfo(this, null);
         }
         AccountServiceUtil.getSerVice().updateLastOnLineTime();
         super.onStop();

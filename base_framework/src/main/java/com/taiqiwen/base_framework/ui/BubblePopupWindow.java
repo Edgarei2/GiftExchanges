@@ -73,14 +73,6 @@ public class BubblePopupWindow extends PopupWindow {
         this.inAnimTime = inAnimTime;
     }
 
-    public boolean isNeedOverShoot() {
-        return mNeedOverShoot;
-    }
-
-    public void setNeedOverShoot(boolean needOverShoot) {
-        this.mNeedOverShoot = needOverShoot;
-    }
-
     public BubblePopupWindow(Activity activity, boolean defaultView) {
         super(activity);
         this.activity = activity;
@@ -104,9 +96,6 @@ public class BubblePopupWindow extends PopupWindow {
         this(activity, true);
     }
 
-    /**
-     * 默认的布局，就一个textview，添加文字
-     */
     private void defaultView() {
         mTextView = new TextView(activity);
         mTextView.setTextColor(activity.getResources().getColor(R.color.ConstTextInverse));
@@ -120,11 +109,6 @@ public class BubblePopupWindow extends PopupWindow {
         getContentView().measure(AT_MOST, AT_MOST);
     }
 
-    /**
-     * 设置显示的view
-     *
-     * @param view
-     */
     public void setBubbleView(View view) {
         bubbleView = new BubbleLayout(activity);
         bubbleView.setBackgroundColor(Color.TRANSPARENT);
@@ -151,9 +135,6 @@ public class BubblePopupWindow extends PopupWindow {
         setContentView(bubbleView);
     }
 
-    /**
-     * 隐藏虚拟键盘
-     */
     private void hideStatusBar() {
         if (!isHideVirtualKey) {
             return;
@@ -169,25 +150,6 @@ public class BubblePopupWindow extends PopupWindow {
         }
     }
 
-    /**
-     * 是否显示虚拟键盘
-     *
-     * @param b
-     */
-    public void setHideVirtualKey(boolean b) {
-        isHideVirtualKey = b;
-    }
-
-    public void setSupportAutoRtl(boolean supportAutoRtl) {
-        // Douyin do nothing
-    }
-
-    /**
-     * 设置布局的大小
-     *
-     * @param width
-     * @param height
-     */
     public void setParam(int width, int height) {
         mWidth = width;
         mHeight = height;
@@ -195,43 +157,6 @@ public class BubblePopupWindow extends PopupWindow {
         setHeight(height);
         BubbleLayout.DEFAULT_WIDTH = width;
         BubbleLayout.DEFAULT_HEIGHT = height;
-    }
-
-    public void setParam(int width, int height, int delta) {
-        mWidth = width;
-        mHeight = height + delta;
-        setWidth(width);
-        setHeight(height + delta);
-        BubbleLayout.DEFAULT_WIDTH = width;
-        BubbleLayout.DEFAULT_HEIGHT = height;
-    }
-
-    public void setParamHeight(int height) {
-        mHeight = height;
-        setHeight(height);
-        BubbleLayout.DEFAULT_HEIGHT = height;
-    }
-
-    public void setParamWidth(int width) {
-        mWidth = width;
-        setWidth(width);
-        BubbleLayout.DEFAULT_WIDTH = width;
-    }
-
-    public void setBubbleText(String showText) {
-        mTextView.setText(showText);
-    }
-
-    public void setBubbleText(int showTextResId) {
-        mTextView.setText(showTextResId);
-    }
-
-    public void setBubbleTextSize(int unit, int bubbleTextSizee) {
-        mTextView.setTextSize(unit, bubbleTextSizee);
-    }
-
-    public void setTextTypeface(Typeface tf) {
-        mTextView.setTypeface(tf);
     }
 
     public void show(View parent) {
@@ -267,12 +192,6 @@ public class BubblePopupWindow extends PopupWindow {
         }
     }
 
-    /**
-     * 显示弹窗
-     *
-     * @param parent
-     * @param gravity
-     */
     public void show(View parent, int gravity, boolean isMiddle, float bubbleOffset) {
         if (activity.isFinishing() || parent == null || parent.getWindowToken() == null) {
             return;
@@ -288,8 +207,6 @@ public class BubblePopupWindow extends PopupWindow {
             } else {
                 getContentView().measure(AT_MOST, AT_MOST);
             }
-
-            //气泡尖角位置偏移量。默认位于中间
             if (isMiddle) {
                 if (gravity == Gravity.BOTTOM || gravity == Gravity.TOP) {
                     bubbleOffset = getMeasuredWidth() / 2;
@@ -342,72 +259,6 @@ public class BubblePopupWindow extends PopupWindow {
                     showAtLocation(parent, Gravity.NO_GRAVITY, location[0] + mXOffset - getMeasuredWidth() - DEFAULT_MARGIN,
                             location[1] + mYOffset + middleSize);
                     animatorEasyInOut(true, gravity);
-                    break;
-                default:
-                    break;
-            }
-            mIsAlreadyDismiss = false;
-            if (mAutoDismissDelayMillis > 0) {
-                getContentView().postDelayed(mDismissRunnable, mAutoDismissDelayMillis);
-            }
-        } else {
-            super.dismiss();
-        }
-    }
-
-    /**
-     * 位置调整，安全位置位于上64dp，左右16dp位置处
-     */
-    public void showStickerPop(View parent) {
-        if (activity.isFinishing() || parent == null || parent.getWindowToken() == null) {
-            return;
-        }
-
-        float padding = UIUtils.dip2Px(activity, 36);
-        float limitHeight = UIUtils.dip2Px(activity, 64f);
-        float limitWidth = UIUtils.dip2Px(activity, 16f);
-
-        getContentView().removeCallbacks(mDismissRunnable);
-        if (!this.isShowing()) {
-            int[] location = new int[2];
-            if (mLocationSupplier != null) {
-                Point point = mLocationSupplier.get();
-                location[0] = point.x;
-                location[1] = point.y;
-            } else {
-                parent.getLocationOnScreen(location);
-            }
-            mGravity = Gravity.TOP;
-            mBubbleOffset = -(int) UIUtils.dip2Px(parent.getContext(), 3.5f);
-            // 如果点击位置+window高度+padding到顶部的距离小于64dp，那么弹窗展示在下面
-            if (location[1] - getMeasureHeight() - padding < limitHeight) {
-                mGravity = Gravity.BOTTOM;
-            }
-            // 如果点击位置-window宽度/2小于左边的临界值，那么需要向右边偏移
-            if (location[0] - getMeasuredWidth() / 2f < limitWidth) {
-                mXOffset = (int) (limitWidth - (location[0] - getMeasuredWidth() / 2f));
-            }
-            // 如果点击位置+window宽度/2小于右边边的临界值，那么需要向左边偏移
-            if (ScreenUtils.getScreenWidth(activity) - (location[0] + getMeasuredWidth() / 2f) < limitWidth) {
-                mXOffset = (int) (ScreenUtils.getScreenWidth(activity) - (location[0] + getMeasuredWidth() / 2f) - limitWidth);
-            }
-
-            int orientation = getOrientation(mGravity);
-            float bubbleOffset = getMeasuredWidth() / 2f;
-            // 三角位置优先和手指点击位置上下方
-            bubbleView.setBubbleParams(orientation, bubbleOffset + mBubbleOffset - mXOffset); // 设置气泡布局方向及尖角偏移
-
-            hideStatusBar();
-            switch (mGravity) {
-                case Gravity.BOTTOM:
-                    showAtLocation(parent, Gravity.NO_GRAVITY,
-                            (int) (location[0] + mXOffset - bubbleOffset), (int) (location[1] + mYOffset + padding));
-                    animatorEasyInOut(true, mGravity);
-                    break;
-                case Gravity.TOP:
-                    showAtLocation(parent, Gravity.NO_GRAVITY, (int) (location[0] + mXOffset - bubbleOffset),
-                            (int) (location[1] + mYOffset - padding - getMeasureHeight()));
-                    animatorEasyInOut(true, mGravity);
                     break;
                 default:
                     break;
@@ -533,38 +384,14 @@ public class BubblePopupWindow extends PopupWindow {
         }
     }
 
-    public void dismissDirectly() {
-        if (!mIsAlreadyDismiss) {
-            bubbleView.setVisibility(View.GONE);
-            onDestroy();
-            getContentView().removeCallbacks(mDismissRunnable);
-            mXOffset = 0;
-            mYOffset = 0;
-        }
-    }
-
-
-    /**
-     * 测量高度
-     *
-     * @return
-     */
     public int getMeasureHeight() {
         return getContentView().getMeasuredHeight();
     }
 
-    /**
-     * 测量宽度
-     *
-     * @return
-     */
     public int getMeasuredWidth() {
         return getContentView().getMeasuredWidth();
     }
 
-    /**
-     * 在结束时，需要调用此方法，防止内崔泄漏
-     */
     public void onDestroy() {
         if (set != null) {
             set.removeAllListeners();
@@ -581,28 +408,6 @@ public class BubblePopupWindow extends PopupWindow {
         }
     }
 
-    /**
-     * 历史逻辑无从追溯 相比于onDestroy，这里取消了activity.isFinishing()的判定
-     */
-    public void dismissDirectly2() {
-        if (!mIsAlreadyDismiss) {
-            bubbleView.setVisibility(View.GONE);
-            if (set != null) {
-                set.removeAllListeners();
-                set.cancel();
-                set = null;
-            }
-            try {
-                super.dismiss();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            getContentView().removeCallbacks(mDismissRunnable);
-            mXOffset = 0;
-            mYOffset = 0;
-        }
-    }
-
     public static float dip2Px(Context activity, float dipValue) {
         final float scale = activity.getResources().getDisplayMetrics().density;
         return dipValue * scale + 0.5f;
@@ -614,10 +419,6 @@ public class BubblePopupWindow extends PopupWindow {
 
     private SupplierC<Point> mLocationSupplier;
 
-    public void setLocationSupplier(SupplierC<Point> locationSupplier) {
-        mLocationSupplier = locationSupplier;
-    }
-
     public void measure() {
         if (mWidth != 0 && mHeight != 0) {
             int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(mWidth, View.MeasureSpec.EXACTLY);
@@ -625,19 +426,6 @@ public class BubblePopupWindow extends PopupWindow {
             getContentView().measure(widthMeasureSpec, heightMeasureSpec);
         } else {
             getContentView().measure(AT_MOST, AT_MOST);
-        }
-    }
-
-    public void measureAtMost() {
-        if (mWidth != 0 && mHeight != 0) {
-            int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(mWidth, View.MeasureSpec.EXACTLY);
-            int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(mHeight, View.MeasureSpec.EXACTLY);
-            getContentView().measure(widthMeasureSpec, heightMeasureSpec);
-        } else {
-            getContentView()
-                    .measure(View.MeasureSpec.makeMeasureSpec(ScreenUtils.getScreenWidth(getContentView().getContext()), AT_MOST),
-                            View.MeasureSpec
-                                    .makeMeasureSpec(ScreenUtils.getScreenHeight(getContentView().getContext()), AT_MOST));
         }
     }
 
@@ -666,11 +454,9 @@ public class BubblePopupWindow extends PopupWindow {
             return;
         }
 
-        // CHECKSTYLE:OFF
         float limitWidth = UIUtils.dip2Px(activity, 16f);
         float marginEnd = UIUtils.dip2Px(activity, 16f);
         float parentSize = UIUtils.dip2Px(activity, 36f);
-        // CHECKSTYLE:ON
 
         getContentView().removeCallbacks(mDismissRunnable);
         if (!this.isShowing()) {
@@ -741,17 +527,17 @@ public class BubblePopupWindow extends PopupWindow {
                 parent.getLocationOnScreen(location);
             }
             hideStatusBar();
-            int bubbleOffset = getMeasuredWidth() / 2;                                          // 气泡尖角位置偏移量, 默认位于中间
-            int toParentDistance = (parent.getMeasuredWidth() - getMeasuredWidth()) / 2;        // 相对于AnchorView偏移的距离
+            int bubbleOffset = getMeasuredWidth() / 2;
+            int toParentDistance = (parent.getMeasuredWidth() - getMeasuredWidth()) / 2;
             int bubbleViewX = location[0] + mXOffset + toParentDistance;
 
-            int limitLeftMargin = (int) UIUtils.dip2Px(activity, 16f);                          // 离页面左边距最小距离
+            int limitLeftMargin = (int) UIUtils.dip2Px(activity, 16f);
             if (bubbleViewX < limitLeftMargin) {
-                bubbleOffset -= limitLeftMargin - bubbleViewX;                                  // 气泡箭头为了保持在原位置, 相对向左移动
-                bubbleViewX = limitLeftMargin;                                                  // 气泡整体向右移动
+                bubbleOffset -= limitLeftMargin - bubbleViewX;
+                bubbleViewX = limitLeftMargin;
             }
 
-            bubbleView.setBubbleParams(orientation, bubbleOffset);                              // 设置气泡布局方向及尖角偏移
+            bubbleView.setBubbleParams(orientation, bubbleOffset);
             showAtLocation(parent, Gravity.NO_GRAVITY, bubbleViewX, location[1] - getMeasureHeight() + mYOffset - DEFAULT_MARGIN);
             animatorEasyInOut(true, mGravity);
             mIsAlreadyDismiss = false;

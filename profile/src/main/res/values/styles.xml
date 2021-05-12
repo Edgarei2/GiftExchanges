@@ -39,6 +39,10 @@
         <item name="android:textSize">17dp</item>
         <item name="android:lineSpacingExtra">2dp</item>
     </style>
+    <style name="font_size_36">
+        <item name="android:textSize">18dp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
     <style name="font_size_40">
         <item name="android:textSize">20dp</item>
         <item name="android:lineSpacingExtra">2dp</item>

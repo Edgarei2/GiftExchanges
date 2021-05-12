@@ -204,6 +204,8 @@ class GiftSessionFragment : Fragment()/*, GiftCardView.OnCheckOut */ {
         super.setUserVisibleHint(isVisibleToUser)
         if (!isVisibleToUser) {
             cleanBubbles()
+        } else {
+            viewModel.setLoginStatus(AccountServiceUtil.getSerVice().isLogged())
         }
     }
 

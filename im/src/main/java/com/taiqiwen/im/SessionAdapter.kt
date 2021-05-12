@@ -16,11 +16,16 @@ import com.test.account_api.AccountServiceUtil
 class SessionAdapter(
     private val curContext: Context,
     private var sessionList: List<Session>,
-    private val groupList: List<Group>,
+    private var groupList: List<Group>,
     private var channelObjIdMap: Map<String, String>) : RecyclerView.Adapter<SessionAdapter.BaseViewHolder>() {
 
-    fun updateSessionList(newSessionList: List<Session>) {
-        sessionList = newSessionList
+    fun updateSessionList(newSessionList: List<Session>?) {
+        sessionList = newSessionList ?: emptyList()
+    }
+
+    fun updateGroupList(newGroupList: List<Group>?) {
+        groupList = newGroupList ?: emptyList()
+        notifyItemChanged(0)
     }
 
     fun updateChannelObjIdMap(map: Map<String, String>) {
@@ -36,12 +41,12 @@ class SessionAdapter(
         return false
     }
 
-    fun updateLatestMessage(event: NewMessageEvent) {
+    fun updateLatestMessage(event: NewMessageEvent, unRead: Int = 1) {
         if (event.newMsg.senderUid == AccountServiceUtil.getSerVice().getCurUserId()) return
         for (index in sessionList.indices) {
             if (sessionList[index].user?.userId == event.newMsg.senderUid) {
                 sessionList[index].latestMsg = event.newMsg.msg
-                sessionList[index].unRead += 1
+                sessionList[index].unRead += unRead
                 notifyItemChanged(index + 1)
                 break
             }
@@ -85,7 +90,7 @@ class SessionAdapter(
                 holder.avatar.setImageURI(session.user?.avatarUrl)
                 holder.name.text = session.user?.userName
                 holder.lastMsg.text = session.latestMsg
-                holder.type.text = "好友"
+                holder.type.text = if (session.user?.userId == "0") "系统" else "好友"
                 holder.area.setOnClickListener {
                     val channelId = SessionViewModel.getChannelId(AccountServiceUtil.getSerVice().getCurUserId(), session.user?.userId)
                     ChatActivity.start(curContext, session.user, channelId, channelObjIdMap[channelId])

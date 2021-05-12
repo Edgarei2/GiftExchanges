@@ -16,3 +16,16 @@ class LeftViewHolder(view: View) : MsgViewHolder(view) {
 class RightViewHolder(view: View) : MsgViewHolder(view) {
     val rightMsg: TextView = view.findViewById(R.id.rightMsg)
 }
+
+sealed class GroupMsgViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    val icon: SimpleDraweeView = view.findViewById(R.id.icon)
+    val senderName: TextView = view.findViewById(R.id.sender_name)
+}
+
+class GroupLeftViewHolder(view: View) : GroupMsgViewHolder(view) {
+    val leftMsg: TextView = view.findViewById(R.id.leftMsg)
+}
+
+class GroupRightViewHolder(view: View) : GroupMsgViewHolder(view) {
+    val rightMsg: TextView = view.findViewById(R.id.rightMsg)
+}

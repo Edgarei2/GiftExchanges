@@ -3,10 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
-        <activity android:name=".SendGiftActivity"></activity>
+        <activity android:name=".ExtraFunctionActivity"></activity>
+        <activity android:name=".SendGiftActivity" />
         <activity
             android:name=".GiftsGalleryActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/Theme.MyApp" />
         <activity android:name=".LoginActivity" />
     </application>
 

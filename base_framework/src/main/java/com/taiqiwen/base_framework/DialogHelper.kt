@@ -15,13 +15,15 @@ import java.util.ArrayList
 object DialogHelper {
 
     fun showDialog(
-        context: Context,
+        context: Context?,
         title: String,
         detail: String,
         positiveText: String = "确认",
         negativeText: String = "取消",
         positiveCb: (() -> Unit)? = null,
         negativeCb: (() -> Unit)? = null) {
+
+        if (context == null) return
 
         MaterialStyledDialog.Builder(context)
             .setHeaderDrawable(R.drawable.header)

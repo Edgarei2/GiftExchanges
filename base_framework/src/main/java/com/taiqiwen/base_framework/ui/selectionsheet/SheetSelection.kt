@@ -30,6 +30,7 @@ class SheetSelection private constructor() : BottomSheetDialogFragment() {
             source = arguments?.getParcelableArrayList(ARGS_ITEMS) ?: emptyList(),
             selectedPosition = arguments?.getInt(ARGS_SELECTED_POSITION, NO_SELECT) ?: NO_SELECT,
             searchNotFoundText = arguments?.getString(ARGS_SEARCH_NOT_FOUND_TEXT) ?: "Search not found.",
+            showChecked = arguments?.getBoolean(ARGS_SHOW_CHECKED_ICON, false) ?: false,
             onItemSelectedListener = onItemSelectedListener
         )
     }
@@ -150,6 +151,7 @@ class SheetSelection private constructor() : BottomSheetDialogFragment() {
         private var showDraggedIndicator: Boolean = false
         private var searchEnabled: Boolean = false
         private var searchNotFoundText: String? = null
+        private var showCheckedIcon: Boolean= false
         private var listener: OnItemSelectedListener? = null
 
         fun theme(@StyleRes themeId: Int) = apply {
@@ -189,6 +191,10 @@ class SheetSelection private constructor() : BottomSheetDialogFragment() {
             this.searchNotFoundText = context.getString(textResId)
         }
 
+        fun showCheckedIcon(show: Boolean) = apply {
+            this.showCheckedIcon = show
+        }
+
         fun onItemClickListener(listener: OnItemSelectedListener) = apply {
             this.listener = listener
         }
@@ -203,6 +209,7 @@ class SheetSelection private constructor() : BottomSheetDialogFragment() {
                     putBoolean(ARGS_SHOW_DRAGGED_INDICATOR, showDraggedIndicator)
                     putBoolean(ARGS_SEARCH_ENABLED, searchEnabled)
                     putString(ARGS_SEARCH_NOT_FOUND_TEXT, searchNotFoundText)
+                    putBoolean(ARGS_SHOW_CHECKED_ICON, showCheckedIcon)
                 }
             onItemClickListener = listener
         }
@@ -224,5 +231,6 @@ class SheetSelection private constructor() : BottomSheetDialogFragment() {
         private const val ARGS_SELECTED_POSITION = "SheetSelection:ARGS_SELECTED_POSITION"
         private const val ARGS_SHOW_DRAGGED_INDICATOR = "SheetSelection:ARGS_SHOW_DRAGGED_INDICATOR"
         private const val ARGS_SEARCH_ENABLED = "SheetSelection:ARGS_SEARCH_ENABLED"
+        private const val ARGS_SHOW_CHECKED_ICON = "SheetSelection:SHOW_CHECKED_ICON"
     }
 }

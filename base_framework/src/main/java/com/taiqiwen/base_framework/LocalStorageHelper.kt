@@ -16,12 +16,9 @@ object LocalStorageHelper {
 
     @JvmStatic
     fun saveUserInfo(context: Context, giftUser: GiftUser?) {
-        if (giftUser == null) {
-            return
-        }
         val userInfo: SharedPreferences = context.getSharedPreferences(TAG_USER_STATUS, MODE_PRIVATE)
         val editor = userInfo.edit()
-        editor.putString(KEY_CUR_LOGGED_USER, gson.toJson(giftUser))
+        editor.putString(KEY_CUR_LOGGED_USER, if (giftUser != null) gson.toJson(giftUser) else "")
         editor.apply()
     }
 

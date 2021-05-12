@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp">
+
+    <TextView
+        android:id="@+id/type_info"
+        style="@style/font_size_26"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/session_type"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="群组"
+        android:textColor="#ffffff" />
+
+    <LinearLayout
+        android:id="@+id/line_entry_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout"
+            android:orientation="vertical"
+            android:layout_width="60dp"
+            android:layout_height="75dp"
+            android:padding="5dp">
+
+            <FrameLayout
+                android:layout_width="50dp"
+                android:layout_height="50dp">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/group_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:placeholderImage="@drawable/gift"
+                    app:roundAsCircle="true" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/group_name"
+                android:layout_width="50dp"
+                android:layout_height="15dp"
+                android:gravity="center"
+                style="@style/font_size_20"
+                tools:text="华东师范大学"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider_line"
+        android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_height="1px"
+        android:background="@color/LineReverse2" />
+
+</LinearLayout>

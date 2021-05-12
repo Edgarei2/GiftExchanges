@@ -20,6 +20,7 @@ object SheetHelper {
                   dataSource: List<ISheetData>?,
                   searchNotFoundText: String = "未找到相关结果",
                   noItemHintText: String = "这里为空",
+                  showChecked: Boolean = false,
                   onClickListener: (SheetSelectionItem, Int) -> Unit) {
         if (context == null || dataSource == null) {
             return
@@ -53,6 +54,7 @@ object SheetHelper {
             .searchEnabled(true)
             .searchNotFoundText(searchNotFoundText)
             .theme(R.style.Theme_Custom_SheetSelection)
+            .showCheckedIcon(showChecked)
             .onItemClickListener(onClickListener)
             .show()
     }

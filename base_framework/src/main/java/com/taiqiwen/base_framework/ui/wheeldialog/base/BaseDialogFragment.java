@@ -7,12 +7,14 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 
 import com.taiqiwen.base_framework.R;
 
@@ -35,10 +37,12 @@ public abstract class BaseDialogFragment extends DialogFragment {
      */
     public static final String DIALOG_CANCELABLE_TOUCH_OUT_SIDE = "dialog_cancelable_touch_out_side";
 
+    public static final String DIALOG_BG_TRANSPARENT = "dialog_background_transparent";
+
     protected Bundle bundle;
     protected Activity activity;
 
-    protected boolean isCancelableTouchOutSide, isCancelable, isBack;
+    protected boolean isCancelableTouchOutSide, isCancelable, isBack, isBgTransparent;
 
     @Override
     public void onAttach(Context context) {
@@ -77,6 +81,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
         isBack = bundle.getBoolean(DIALOG_BACK, false);
         isCancelable = bundle.getBoolean(DIALOG_CANCELABLE, false);
         isCancelableTouchOutSide = bundle.getBoolean(DIALOG_CANCELABLE_TOUCH_OUT_SIDE, false);
+        isBgTransparent = bundle.getBoolean(DIALOG_BG_TRANSPARENT, true);
 
         Log.i(TAG, "isBack =" + isBack + " isCancelable =" + isCancelable + " isCancelableTouchOutSide =" + isCancelableTouchOutSide);
     }
@@ -126,8 +131,10 @@ public abstract class BaseDialogFragment extends DialogFragment {
     private void onBackPressed() {
         //设置窗口以对话框样式显示
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Dialog);
-        //设置对话框背景色，否则有虚框
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        if (isBgTransparent) {
+            //设置对话框背景色，否则有虚框
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
         getDialog().setCancelable(isCancelable);
         getDialog().setCanceledOnTouchOutside(isCancelableTouchOutSide);
 
@@ -144,5 +151,12 @@ public abstract class BaseDialogFragment extends DialogFragment {
                 return false;
             }
         });
+    }
+
+    protected int getScreenWidth(Context context) {
+        WindowManager vm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        vm.getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
     }
 }

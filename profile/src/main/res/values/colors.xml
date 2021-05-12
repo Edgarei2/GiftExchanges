@@ -10,5 +10,6 @@
     <color name="title_text">#26B8EE</color>
     <color name="bar_color">#eeccff</color>
     <color name="TextReverse4">#57161823</color>
-
+    <color name="BGPlaceholderDefault">#a3a3c2</color>
+    <color name="user_profile_button">#9966ff</color>
 </resources>

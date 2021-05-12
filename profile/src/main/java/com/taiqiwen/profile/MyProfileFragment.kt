@@ -17,7 +17,9 @@ import com.taiqiwen.base_framework.ToastHelper
 import com.taiqiwen.base_framework.model.GiftUser
 import com.taiqiwen.base_framework.ui.SheetHelper
 import com.taiqiwen.base_framework.ui.SheetHelper.KEY_CHECKOUT_STATUS
+import com.taiqiwen.im_api.ChatServiceUtil
 import com.taiqiwen.profile.ui.AvatarLayout
+import com.taiqiwen.profile_api.model.FriendListDTO
 import com.test.account_api.AccountServiceUtil
 import kotlin.concurrent.thread
 
@@ -146,6 +148,12 @@ class MyProfileFragment : Fragment() {
             SheetHelper.showSheet(context, "我的朋友", users, noItemHintText = "您还没有朋友") { item, position ->
                 if (position >= users.size) return@showSheet
                 shareViewModel.sessionExtra.value = users[position]
+                val channelId = getChannelId(AccountServiceUtil.getSerVice().getCurUserId(), users[position].userId)
+                ChatServiceUtil.getSerVice().startChatActivity(context,
+                    users[position],
+                    channelId,
+                    shareViewModel.channelObjIdMap.value?.get(channelId)
+                )
             }
         }
         view.findViewById<View>(R.id.item2).setOnClickListener {
@@ -163,12 +171,16 @@ class MyProfileFragment : Fragment() {
                             }
                         }
                     }
-
                 }
             }
         }
         view.findViewById<View>(R.id.item1).setOnClickListener {
             context?.let { it1 -> GiftsGalleryActivity.start(it1) }
+        }
+        view.findViewById<View>(R.id.item3).setOnClickListener {
+            ExtraFunctionActivity.start(
+                context, FriendListDTO(shareViewModel.friendsDetailList.value?.values?.toList() ?: emptyList())
+            )
         }
     }
 
@@ -180,16 +192,13 @@ class MyProfileFragment : Fragment() {
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
     }
 
+    private fun getChannelId(curUserId: String?, uid: String?) : String {
+        return if (curUserId == null || uid == null) ""
+        else if (curUserId < uid) "${curUserId}_${uid}" else "${uid}_${curUserId}"
+    }
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MyProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
                 MyProfileFragment().apply {

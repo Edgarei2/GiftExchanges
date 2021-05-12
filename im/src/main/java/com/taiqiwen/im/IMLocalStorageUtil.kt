@@ -52,6 +52,22 @@ object IMLocalStorageUtil {
     }
 
     @JvmStatic
+    fun saveMessage(context: Context?, channelId: String, msgList: List<NewMessage>) {
+        if (context == null) return
+        val userInfo: SharedPreferences = context.getSharedPreferences(TAG_MESSAGE_RECEIVED, Context.MODE_PRIVATE)
+        val previousMsg = userInfo.getString("${KEY_MESSAGE_USER_PREFIX}_${channelId}", "")
+        val editor = userInfo.edit()
+
+        var str = ""
+        for (msg in msgList) {
+            str += "${gson.toJson(msg)}&^"
+        }
+
+        editor.putString("${KEY_MESSAGE_USER_PREFIX}_${channelId}", "${previousMsg}${str}")
+        editor.apply()
+    }
+
+    @JvmStatic
     fun loadMessage(context: Context?, channelId: String) : List<NewMessage> {
         if (context == null) return emptyList()
         val userInfo: SharedPreferences = context.getSharedPreferences(TAG_MESSAGE_RECEIVED, Context.MODE_PRIVATE)

@@ -14,9 +14,12 @@ class SessionViewModel : ViewModel() {
 
     private val isLoggedIn: MutableLiveData<Boolean> = MutableLiveData(false)
     private val sessionList: MutableLiveData<List<Session>> = MutableLiveData(emptyList())
-    private val groupList: MutableLiveData<List<Group>> = MutableLiveData()
+    private val groupList: MutableLiveData<List<Group>> = MutableLiveData(emptyList())
     private val sessionChangeType: MutableLiveData<Int> = MutableLiveData()
     private val channelObjIdMap: MutableLiveData<Map<String, String>> = MutableLiveData()
+    // 接受离线消息
+    private val conditionSatisfied: MutableLiveData<Int> = MutableLiveData()
+    val unReadMsgMap: MutableLiveData<Map<String, List<String>>> = MutableLiveData()
 
     fun getLoginStatus(): LiveData<Boolean> = isLoggedIn
 
@@ -27,6 +30,14 @@ class SessionViewModel : ViewModel() {
     fun setChangeType(type: Int) {
         sessionChangeType.value = type
     }
+
+    fun addCondition() {
+        val oldState = conditionSatisfied.value ?: 0
+        val newState = oldState + 1
+        conditionSatisfied.value = newState
+    }
+
+    fun getConditionSatisfied(): LiveData<Int> = conditionSatisfied
 
     fun updateChannelObjIdList(uidList: List<String>) {
         val curUserId = AccountServiceUtil.getSerVice().getCurUserId() ?: return
@@ -47,13 +58,6 @@ class SessionViewModel : ViewModel() {
     fun getSessionList(): LiveData<List<Session>>  = sessionList
 
     fun initSessionList(context: Context?) {
-/*        val user2 = GiftUser("331e34862d", "2", "user2", "abc", "", 43, "https://c-ssl.duitang.com/uploads/blog/202012/01/20201201143923_6333b.thumb.1000_0.png")
-        val user3 = GiftUser("FMoTGGGL", "3", "user3", "abc", "", 30, "https://pic.qiushibaike.com/system/avtnew/1112/11125684/medium/20170416133732.JPEG")
-        val user4 = GiftUser("T8NdFFFM", "4", "user4", "abc", "", 25, "http://p5.itc.cn/images03/20200517/a128b02d7fd348ddbebf2bd6b25a4837.jpeg")
-
-        val list = listOf(
-            Session(user4, "你妈死了！", "individual", 2)
-        )*/
         sessionList.value = context ?.let {
             IMLocalStorageUtil.loadSessionState(it)
         } ?: emptyList()
@@ -63,7 +67,7 @@ class SessionViewModel : ViewModel() {
     fun getGroupList(): LiveData<List<Group>>  = groupList
 
     fun initGroupList(){
-        val url = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F01%2F30%2F84%2F90573b26c0a7e16.jpg&refer=http%3A%2F%2Fku.90sjimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621679496&t=6155552f8611719368fb308cf284356d"
+/*        val url = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F01%2F30%2F84%2F90573b26c0a7e16.jpg&refer=http%3A%2F%2Fku.90sjimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621679496&t=6155552f8611719368fb308cf284356d"
         groupList.value = listOf(
             Group("nmsl1", url, false),
             Group("nmsl2", url, false),
@@ -72,7 +76,10 @@ class SessionViewModel : ViewModel() {
             Group("nmsl5", url, false),
             Group("nmsl6", url, false),
             Group("nmsl7", url, false)
-        )
+        )*/
+        ImApi.getGroupInfo(AccountServiceUtil.getSerVice().getCurUserId()) { list ->
+            groupList.value = list
+        }
     }
 
     fun addNewSession(user: GiftUser?) {
@@ -87,6 +94,14 @@ class SessionViewModel : ViewModel() {
         newSessionList.add(Session(user, "", Session.TYPE_INDIVIDUAL_STR, 0))
         sessionChangeType.value = TYPE_ADD_LAST
         sessionList.value = newSessionList
+    }
+
+    fun getUnReadMessage() {
+        val curUserId = AccountServiceUtil.getSerVice().getCurUserId()
+        ImApi.getUnReadMessage(curUserId) { map ->
+            unReadMsgMap.value = map
+            addCondition()
+        }
     }
 
     companion object {

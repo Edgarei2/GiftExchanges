@@ -371,6 +371,45 @@ object ProfileApi {
                 }
             })
     }
+
+    fun inviteGame(userId: String?, userName: String?, inviteId: String?, cb: ((String?) -> Unit)?) {
+        service.inviteGame(userId, userName, inviteId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<InviteGameResponseDTO?> {
+                override fun onComplete() { }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onNext(t: InviteGameResponseDTO) {
+                    cb?.invoke(t.result)
+                }
+
+                override fun onError(e: Throwable) {
+                    cb?.invoke(null)
+                }
+            })
+    }
+
+    fun enterGameCheck(userId: String?, roomId: String?, cb: ((String?, String?) -> Unit)?) {
+        service.enterGameCheck(userId, roomId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<EnterGameResponseDTO?> {
+                override fun onComplete() { }
+
+                override fun onSubscribe(d: Disposable) { }
+
+                override fun onNext(t: EnterGameResponseDTO) {
+                    cb?.invoke(t.result, t.beginNow)
+                }
+
+                override fun onError(e: Throwable) {
+                    cb?.invoke(null, null)
+                }
+            })
+    }
+
 }
 
 interface IProfileNetWork {
@@ -447,6 +486,21 @@ interface IProfileNetWork {
         @Field("exchange_obj_ids") exchangeObjIds: String?
     ): Observable<DeclineAllGiftsResponseDTO?>
 
+    @FormUrlEncoded
+    @POST("inviteGame")
+    fun inviteGame(
+        @Field("user_id") userId: String?,
+        @Field("invite_name") userName: String?,
+        @Field("invite_id") inviteId: String?
+    ): Observable<InviteGameResponseDTO?>
+
+    @FormUrlEncoded
+    @POST("enterGameCheck")
+    fun enterGameCheck(
+        @Field("user_id") userId: String?,
+        @Field("room_id") userName: String?
+    ): Observable<EnterGameResponseDTO?>
+
 }
 
 class FriendsResponseDTO(
@@ -500,3 +554,11 @@ class CheckoutAllGiftsResponseDTO(
 class DeclineAllGiftsResponseDTO(
     @SerializedName("decline_all_result") var result: String?
 )
+
+class InviteGameResponseDTO(
+    @SerializedName("game_channel_id") var result: String?
+)
+
+class EnterGameResponseDTO(
+    @SerializedName("result") var result: String?,
+    @SerializedName("begin_now") var beginNow: String?)

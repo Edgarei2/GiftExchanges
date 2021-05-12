@@ -287,14 +287,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="我的个人信息"
+                                android:text="更多功能"
                                 android:textStyle="bold"
                                 android:layout_marginStart="30dp"
                                 android:layout_marginTop="20dp"
                                 style="@style/font_size_48"
                                 android:textColor="@color/bar_color"/>
                         </FrameLayout>
-
 
                     </LinearLayout>
                 </LinearLayout>

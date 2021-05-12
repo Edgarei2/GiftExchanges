@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.facebook.drawee.view.SimpleDraweeView
+import com.taiqiwen.im_api.model.Group
 
 class GroupEntryLayout@JvmOverloads constructor(val curContext: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : LinearLayout(curContext, attrs, defStyleAttr) {
@@ -15,26 +16,25 @@ class GroupEntryLayout@JvmOverloads constructor(val curContext: Context, attrs: 
     private var icon: SimpleDraweeView
     private var name: TextView
     private var redDot: View
+    private var area: View
 
     init {
         LayoutInflater.from(curContext).inflate(R.layout.group_chat_entry_layout, this, true)
         icon = findViewById(R.id.group_icon)
         name = findViewById(R.id.group_name)
         redDot = findViewById(R.id.unread_label)
+        area = findViewById(R.id.layout)
     }
 
-    fun bind(data: Map<String, String>) {
-        if (data.containsKey(KEY_ICON_URI)) {
-            icon.setImageURI(data[KEY_ICON_URI])
+    fun bind(data: Group) {
+        area.setOnClickListener {
+            GroupChatActivity.start(curContext, data)
         }
-        if (data.containsKey(KEY_GROUP_NAME)) {
-            name.text = data[KEY_GROUP_NAME]
-        }
-        if (data.containsKey(KEY_HAS_UNREAD)) {
-            redDot.visibility = if (data[KEY_HAS_UNREAD] == "true") {
-                View.VISIBLE
-            } else View.GONE
-        }
+        icon.setImageURI(data.icon)
+        name.text = data.name
+        redDot.visibility = if (data.hasUnRead) {
+            View.VISIBLE
+        } else View.GONE
     }
 
     companion object {

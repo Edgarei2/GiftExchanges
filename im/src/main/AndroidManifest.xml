@@ -3,9 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
+        <activity android:name=".game.Game2048Activity"></activity>
+        <activity android:name=".GameActivity" />
+        <activity
+            android:name=".GroupChatActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ChatActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
