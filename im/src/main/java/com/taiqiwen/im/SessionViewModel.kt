@@ -67,16 +67,6 @@ class SessionViewModel : ViewModel() {
     fun getGroupList(): LiveData<List<Group>>  = groupList
 
     fun initGroupList(){
-/*        val url = "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F01%2F30%2F84%2F90573b26c0a7e16.jpg&refer=http%3A%2F%2Fku.90sjimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621679496&t=6155552f8611719368fb308cf284356d"
-        groupList.value = listOf(
-            Group("nmsl1", url, false),
-            Group("nmsl2", url, false),
-            Group("nmsl3", url, false),
-            Group("nmsl4", url, false),
-            Group("nmsl5", url, false),
-            Group("nmsl6", url, false),
-            Group("nmsl7", url, false)
-        )*/
         ImApi.getGroupInfo(AccountServiceUtil.getSerVice().getCurUserId()) { list ->
             groupList.value = list
         }
